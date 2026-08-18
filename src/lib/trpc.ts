@@ -51,7 +51,7 @@ type CheckoutSummary = {
   packagingFee: number;
   tax: number;
   total: number;
-  gwp: { variantId: string; name: string } | null;
+  gwp: { variantId: string; name: string; sku?: string } | null;
 };
 
 function invalidateCart(queryClient: ReturnType<typeof useQueryClient>) {
@@ -264,27 +264,19 @@ export const trpc = {
         });
       },
     },
-    createOrder: {
+    createPaymentIntent: {
+      useMutation: () =>
+        useMutation({
+          mutationFn: (input: Parameters<typeof trpcClient.checkout.createPaymentIntent.mutate>[0]) =>
+            trpcClient.checkout.createPaymentIntent.mutate(input),
+        }),
+    },
+    confirmOrder: {
       useMutation: () => {
         const queryClient = useQueryClient();
         return useMutation({
-          mutationFn: async (data: any) => {
-            const result = await trpcClient.checkout.createOrder.mutate(data);
-            try {
-              localStorage.setItem(
-                'lumina_last_order',
-                JSON.stringify({
-                  orderId: result.orderId,
-                  date: new Date().toISOString(),
-                  items: result.items?.length ? result.items : data?.items ?? [],
-                  data,
-                }),
-              );
-            } catch (e) {
-              console.error(e);
-            }
-            return { orderId: result.orderId as string, success: true as const };
-          },
+          mutationFn: (input: { orderId: string; paymentIntentId?: string }) =>
+            trpcClient.checkout.confirmOrder.mutate(input),
           onSuccess: () => {
             void invalidateCart(queryClient);
           },
