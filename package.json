@@ -9,6 +9,7 @@
     "preview": "vite preview --port=8080 --host=0.0.0.0",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
+    "test:e2e": "node scripts/e2e-checkout.mjs",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/db/migrate.ts",
     "db:seed": "tsx src/db/seed.ts",

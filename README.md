@@ -100,3 +100,4 @@ To publish the local backlog as GitHub issues (needs `issues:write`):
 | `npm run lint` | `tsc --noEmit` |
 | `npm run db:migrate` | Apply `drizzle/` SQL |
 | `npm run db:seed` | Idempotent catalog seed |
+| `npm run test:e2e` | Guest checkout + inventory lock (needs a running `npm run dev`) |
