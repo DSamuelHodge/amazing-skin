@@ -39,7 +39,6 @@ export default function CheckoutPage() {
 
   const { data: cart, isLoading } = trpc.cart.get.useQuery();
   const summaryMutation = trpc.checkout.summary.useMutation();
-  const createOrderMutation = trpc.checkout.createOrder.useMutation();
 
   const [formData, setFormData] = useState<ShippingFormData>(() => {
     if (user) {
@@ -149,39 +148,27 @@ export default function CheckoutPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handlePlaceOrder = (paymentDetails: any) => {
+  const handlePaid = (result: { orderId: string; orderNumber: string }) => {
     const pointsEarned = Math.floor(financials.total);
-
-    createOrderMutation.mutate({
-      shippingAddress: formData,
-      billingAddress: formData.sameAsShipping ? formData : {},
-      shippingMethod: formData.shippingMethod,
-      giftPackaging: formData.giftPackaging,
-      giftNote: formData.giftNote,
-      selectedSamples,
-      paymentDetails,
-      financials,
-      items,
-      pointsEarned,
-      pointsRedeemed,
-      timestamp: new Date().toISOString(),
-    }, {
-      onSuccess: (data) => {
-        // Add loyalty points if customer
-        if (isAuthenticated) {
-          addLoyaltyPoints(pointsEarned);
-        }
-        toast.success('Ritual Order Authorized & Confirmed!');
-        setTimeout(() => {
-          window.location.href = `/order-confirmed?orderId=${data.orderId}`;
-        }, 300);
-      },
-      onError: () => {
-        toast.error('Authorization Failed', {
-          description: 'Please double-check your payment information and try again.'
-        });
-      }
-    });
+    if (isAuthenticated) {
+      addLoyaltyPoints(pointsEarned);
+    }
+    try {
+      localStorage.setItem(
+        'lumina_last_order',
+        JSON.stringify({
+          orderId: result.orderNumber,
+          uuid: result.orderId,
+          date: new Date().toISOString(),
+          items,
+          data: { formData, financials },
+        }),
+      );
+    } catch {
+      /* ignore */
+    }
+    toast.success('Ritual Order Authorized & Confirmed!');
+    window.location.href = `/order-confirmed?orderId=${result.orderNumber}`;
   };
 
   if (isLoading) {
@@ -195,7 +182,7 @@ export default function CheckoutPage() {
     );
   }
 
-  if (items.length === 0 && !createOrderMutation.isSuccess) {
+  if (items.length === 0) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-canvas-bg p-6 text-center">
         <div className="max-w-md bg-white rounded-3xl p-8 sm:p-10 border border-stone-200/90 shadow-sm space-y-4">
@@ -302,10 +289,11 @@ export default function CheckoutPage() {
                     total={financials.total}
                     subtotal={financials.subtotal}
                     onBack={() => setActiveStep(2)}
-                    onPlaceOrder={handlePlaceOrder}
-                    isProcessing={createOrderMutation.isPending}
+                    formData={formData}
+                    discountCode={appliedDiscount?.code}
                     pointsRedeemed={pointsRedeemed}
                     setPointsRedeemed={setPointsRedeemed}
+                    onPaid={handlePaid}
                   />
                 </motion.div>
               )}

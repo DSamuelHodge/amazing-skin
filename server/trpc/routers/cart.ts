@@ -9,7 +9,7 @@ import {
   setDiscountCode,
   updateCartItem,
 } from '../cart-db';
-import { isKnownDiscountCode } from './checkout';
+import { loadDiscount } from '../../commerce/pricing';
 
 export const cartRouter = createTRPCRouter({
   get: publicProcedure.query(({ ctx }) => {
@@ -60,9 +60,10 @@ export const cartRouter = createTRPCRouter({
 
   applyDiscountCode: publicProcedure
     .input(z.object({ code: z.string() }))
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const code = input.code.trim().toUpperCase();
-      if (!isKnownDiscountCode(code)) {
+      const row = await loadDiscount(code);
+      if (!row || !row.isActive) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'Invalid discount code. Try LUMINA10, GLOW20, or WELCOME50.',
