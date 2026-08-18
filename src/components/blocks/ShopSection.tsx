@@ -81,7 +81,7 @@ export function ShopSection() {
                       <img src={product.image} alt={product.title} className="sm:h-56 w-full h-48 object-cover" />
                     </a>
                     <div className="absolute top-3 left-3">
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[0.68rem] font-medium bg-stone-900 text-canvas-bg shadow-sm">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[0.68rem] font-medium bg-stone-900 text-forest-text shadow-sm">
                         {product.tag}
                       </span>
                     </div>

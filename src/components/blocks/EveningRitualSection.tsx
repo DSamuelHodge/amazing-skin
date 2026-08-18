@@ -38,7 +38,7 @@ export function EveningRitualSection() {
           >
             {eveningRitual.steps.map((step, i) => (
               <div key={i} className="flex items-center gap-2">
-                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-stone-900 text-[0.7rem] font-semibold text-canvas-bg">
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-stone-900 text-[0.7rem] font-semibold text-forest-text">
                   {i + 1}
                 </span>
                 <span>{step.name}</span>
@@ -60,7 +60,7 @@ export function EveningRitualSection() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <div className="inline-flex items-center gap-2 text-xs font-medium text-stone-600">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-stone-900 text-[0.75rem] font-semibold text-canvas-bg">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-stone-900 text-[0.75rem] font-semibold text-forest-text">
                       {step.number}
                     </span>
                     <span className="tracking-[0.18em] uppercase">{step.name}</span>
