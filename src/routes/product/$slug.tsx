@@ -10,14 +10,14 @@ import { RelatedProducts } from '@/src/components/blocks/RelatedProducts';
 import { ProductReviews } from '@/src/components/blocks/ProductReviews';
 import { trpc, useCartStore } from '@/src/lib/trpc';
 
-// --- MOCKS ---
-// Mocking Route for the sake of this component
-const Route = {
-  useParams: () => ({ slug: 'lumina-glow-serum' })
-};
+function useProductSlug() {
+  const path = window.location.pathname;
+  const match = path.match(/^\/product\/([^/?#]+)/);
+  return decodeURIComponent(match?.[1] || 'lumina-glow-serum');
+}
 
 export default function ProductDetailPage() {
-  const { slug } = Route.useParams();
+  const slug = useProductSlug();
   const { data: product, isLoading, isError } = trpc.products.bySlug.useQuery({ slug });
   
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);

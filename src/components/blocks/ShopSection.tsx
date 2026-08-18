@@ -2,12 +2,35 @@ import { mockData } from "@/src/data/mockData";
 import { Button } from "@/src/components/ui/Button";
 import { ArrowRight, Star, Plus } from "lucide-react";
 import { motion } from "motion/react";
+import { toast } from "sonner";
+import type { MouseEvent } from "react";
+import { trpc, useCartStore } from "@/src/lib/trpc";
+import { navigate, shopProductPath, shopVariantId } from "@/src/lib/nav";
 
 export function ShopSection() {
   const { shop } = mockData;
+  const addItem = trpc.cart.addItem.useMutation();
+  const { openDrawer } = useCartStore();
+
+  const handleAdd = (title: string, event?: MouseEvent) => {
+    event?.preventDefault();
+    event?.stopPropagation();
+    addItem.mutate(
+      { variantId: shopVariantId(title), quantity: 1 },
+      {
+        onSuccess: () => {
+          toast.success(`${title} added to bag`);
+          openDrawer();
+        },
+        onError: () => {
+          toast.error(`Could not add ${title}`);
+        },
+      },
+    );
+  };
 
   return (
-    <section className="text-stone-900 bg-canvas-bg w-full border-stone-200/80 border-t">
+    <section id="shop-section" className="text-stone-900 bg-canvas-bg w-full border-stone-200/80 border-t scroll-mt-24">
       <div className="sm:px-6 lg:px-8 lg:py-20 max-w-6xl mx-auto pt-14 px-4 pb-14">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
           <motion.div 
@@ -33,11 +56,11 @@ export function ShopSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <Button variant="light">
+            <Button variant="light" onClick={() => navigate('#shop-section')}>
               All products
               <ArrowRight className="w-4 h-4" />
             </Button>
-            <Button variant="lightOutline">
+            <Button variant="lightOutline" onClick={() => navigate('#cta-section')}>
               Routine quiz
               <Plus className="w-4 h-4" />
             </Button>
@@ -45,7 +68,6 @@ export function ShopSection() {
         </div>
 
         <div className="space-y-10 lg:space-y-14">
-          {/* New Arrivals */}
           <section className="space-y-5">
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-2">
@@ -57,6 +79,8 @@ export function ShopSection() {
                 </h3>
               </div>
               <button 
+                type="button"
+                onClick={() => navigate('#shop-section')}
                 className="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-stone-700 hover:text-stone-900 transition-colors"
                 aria-label="View all new arrivals"
               >
@@ -68,7 +92,7 @@ export function ShopSection() {
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {shop.newArrivals.map((product, i) => (
                 <motion.article 
-                  key={i}
+                  key={product.title}
                   className="group rounded-3xl border border-stone-200 bg-canvas-surface overflow-hidden flex flex-col shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -77,7 +101,7 @@ export function ShopSection() {
                 >
                   <div className="relative">
                     <div className="absolute inset-0 bg-gradient-to-t from-stone-900/20 via-transparent to-transparent pointer-events-none"></div>
-                    <a href="/product/lumina-glow-serum">
+                    <a href={shopProductPath(product.title)}>
                       <img src={product.image} alt={product.title} className="sm:h-56 w-full h-48 object-cover" />
                     </a>
                     <div className="absolute top-3 left-3">
@@ -90,7 +114,9 @@ export function ShopSection() {
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <h4 className="font-playfair text-lg font-semibold tracking-tight text-stone-900">
-                          {product.title}
+                          <a href={shopProductPath(product.title)} className="hover:underline underline-offset-4">
+                            {product.title}
+                          </a>
                         </h4>
                         <p className="mt-1 text-xs sm:text-sm text-stone-700">
                           {product.description}
@@ -106,7 +132,13 @@ export function ShopSection() {
                         <span className="w-1.5 h-1.5 rounded-full bg-stone-900"></span>
                         <span>{product.note}</span>
                       </div>
-                      <Button variant={i === 0 ? "light" : "lightOutline"} size="sm">
+                      <Button
+                        type="button"
+                        variant={i === 0 ? "light" : "lightOutline"}
+                        size="sm"
+                        onClick={(event) => handleAdd(product.title, event)}
+                        disabled={addItem.isPending}
+                      >
                         Add
                         <Plus className="w-3.5 h-3.5" />
                       </Button>
@@ -117,7 +149,6 @@ export function ShopSection() {
             </div>
           </section>
 
-          {/* Top Products */}
           <section className="space-y-5">
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-2">
@@ -129,6 +160,8 @@ export function ShopSection() {
                 </h3>
               </div>
               <button 
+                type="button"
+                onClick={() => navigate('#shop-section')}
                 className="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-stone-700 hover:text-stone-900 transition-colors"
                 aria-label="View all top rated products"
               >
@@ -140,23 +173,25 @@ export function ShopSection() {
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-5">
               {shop.topProducts.map((product, i) => (
                 <motion.article 
-                  key={i}
+                  key={product.title}
                   className="group rounded-3xl border border-stone-200 bg-canvas-surface px-5 py-5 sm:px-6 sm:py-6 flex flex-col shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
                 >
-                  <div className="relative mb-4 rounded-2xl overflow-hidden">
+                  <a href={shopProductPath(product.title)} className="relative mb-4 rounded-2xl overflow-hidden block">
                     <img src={product.image} alt={product.title} className="sm:h-40 w-full h-32 object-cover" />
-                  </div>
+                  </a>
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="text-[0.7rem] font-medium tracking-[0.18em] uppercase text-stone-700 mb-1.5">
                         {product.tag}
                       </p>
                       <h4 className="font-playfair text-lg font-semibold tracking-tight text-stone-900">
-                        {product.title}
+                        <a href={shopProductPath(product.title)} className="hover:underline underline-offset-4">
+                          {product.title}
+                        </a>
                       </h4>
                       <p className="mt-1 text-xs sm:text-sm text-stone-700">
                         {product.description}
@@ -175,7 +210,13 @@ export function ShopSection() {
                       </div>
                       <span className="text-stone-600">• {product.reviews} reviews</span>
                     </div>
-                    <Button variant={i === 0 ? "light" : "lightOutline"} size="sm">
+                    <Button
+                      type="button"
+                      variant={i === 0 ? "light" : "lightOutline"}
+                      size="sm"
+                      onClick={(event) => handleAdd(product.title, event)}
+                      disabled={addItem.isPending}
+                    >
                       Add
                       <Plus className="w-3.5 h-3.5" />
                     </Button>

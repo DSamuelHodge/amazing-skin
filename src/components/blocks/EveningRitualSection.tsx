@@ -8,7 +8,7 @@ export function EveningRitualSection() {
   const { eveningRitual } = mockData;
 
   return (
-    <section className="text-stone-900 bg-canvas-bg w-full border-stone-200/80 border-t">
+    <section id="evening-ritual" className="text-stone-900 bg-canvas-bg w-full border-stone-200/80 border-t scroll-mt-24">
       <div className="sm:px-6 lg:px-8 lg:py-20 max-w-6xl mx-auto pt-14 px-4 pb-14">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-12">
           <motion.div 

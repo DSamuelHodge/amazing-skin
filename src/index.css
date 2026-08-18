@@ -15,6 +15,11 @@
   a, button {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-forest-bg rounded-sm;
   }
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  a[href] {
+    cursor: pointer;
+  }
   * {
     @apply border-border outline-ring/50;
   }
