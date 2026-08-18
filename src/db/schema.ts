@@ -11,9 +11,10 @@ import {
   pgEnum,
   index,
   uniqueIndex,
-  primaryKey
+  primaryKey,
+  check,
 } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
 // ==========================================
@@ -275,7 +276,8 @@ export const productReviews = pgTable('product_reviews', {
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 }, (table) => [
   index('reviews_product_idx').on(table.productId),
-  index('reviews_rating_idx').on(table.rating)
+  index('reviews_rating_idx').on(table.rating),
+  check('rating_range', sql`rating between 1 and 5`),
 ]);
 
 // ==========================================

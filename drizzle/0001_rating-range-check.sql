@@ -1,0 +1,1 @@
+ALTER TABLE "product_reviews" ADD CONSTRAINT "rating_range" CHECK (rating between 1 and 5);
