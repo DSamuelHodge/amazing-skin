@@ -6,9 +6,11 @@ import type { AppRouter } from './trpc/root';
 import type { createContext as CreateContextFn } from './trpc/context';
 import { getGraphqlYoga, isGraphqlRequest } from './graphql';
 import { AUTH_BASE_PATH_VALUE, getAuth } from '../lib/auth';
+import { handleStripeWebhook, WebhookError } from './webhooks/stripe';
 
 const TRPC_PREFIX = '/api/trpc';
 const AUTH_PREFIX = AUTH_BASE_PATH_VALUE;
+const STRIPE_WEBHOOK_PATH = '/api/webhooks/stripe';
 
 function getTrpcPath(url: string) {
   const pathname = url.split('?')[0] ?? '';
@@ -21,6 +23,22 @@ function getTrpcPath(url: string) {
 function isAuthRequest(url: string) {
   const pathname = url.split('?')[0] ?? '';
   return pathname === AUTH_PREFIX || pathname.startsWith(`${AUTH_PREFIX}/`);
+}
+
+function isStripeWebhook(url: string) {
+  const pathname = url.split('?')[0] ?? '';
+  return pathname === STRIPE_WEBHOOK_PATH;
+}
+
+function readRawBody(req: IncomingMessage): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    const chunks: Buffer[] = [];
+    req.on('data', (chunk) => {
+      chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+    });
+    req.on('end', () => resolve(Buffer.concat(chunks)));
+    req.on('error', reject);
+  });
 }
 
 async function handleTrpcRequest(
@@ -55,9 +73,33 @@ async function handleAuthRequest(req: IncomingMessage, res: ServerResponse) {
   await toNodeHandler(auth)(req, res);
 }
 
+async function handleWebhookRequest(req: IncomingMessage, res: ServerResponse) {
+  const rawBody = await readRawBody(req);
+  const header = req.headers['stripe-signature'];
+  const signature = Array.isArray(header) ? header[0] : header;
+  try {
+    const result = await handleStripeWebhook(rawBody, signature);
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result));
+  } catch (err) {
+    const status = err instanceof WebhookError ? err.status : 500;
+    console.error('[lumina-api] Stripe webhook failed', err);
+    if (!res.headersSent) {
+      res.statusCode = status;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ error: err instanceof Error ? err.message : String(err) }));
+    }
+  }
+}
+
 function attachApi(server: { middlewares: Connect.Server }, vite?: ViteDevServer) {
   const middleware: Connect.NextHandleFunction = (req, res, next) => {
     const url = req.originalUrl ?? req.url ?? '';
+    if (isStripeWebhook(url)) {
+      void handleWebhookRequest(req, res);
+      return;
+    }
     if (isAuthRequest(url)) {
       void handleAuthRequest(req, res).catch((err) => {
         console.error('[lumina-api] Better Auth handler failed', err);
