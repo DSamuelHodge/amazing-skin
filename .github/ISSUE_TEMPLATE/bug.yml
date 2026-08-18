@@ -1,0 +1,43 @@
+name: Bug report
+description: Something is broken in the storefront or API
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: describe
+    attributes:
+      label: Describe the bug
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - blocker (cannot complete purchase)
+        - major (feature unusable)
+        - minor (workaround exists)
+    validations:
+      required: true
