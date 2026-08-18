@@ -1,0 +1,65 @@
+name: Production task
+description: A PR-sized task from PRODUCTION_ROADMAP.md
+title: "[Phase N] "
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: phase
+    attributes:
+      label: Phase
+      options:
+        - "1 — Database & foundation"
+        - "2 — Backend tRPC & auth"
+        - "3 — Stripe & checkout"
+        - "4 — Admin & customer portals"
+        - "5 — QA, a11y, CI/CD"
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - critical
+        - high
+        - medium
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What this issue ships and why it exists.
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current state
+      description: What the prototype does today.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Checklist that a reviewer can verify.
+      value: |
+        - [ ]
+        - [ ]
+    validations:
+      required: true
+  - type: textarea
+    id: impl
+    attributes:
+      label: Implementation notes
+      description: Files, APIs, and constraints. Keep this PR-sized.
+    validations:
+      required: true
+  - type: input
+    id: branch
+    attributes:
+      label: Proposed branch
+      placeholder: feat/short-slug
+    validations:
+      required: true

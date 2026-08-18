@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Production roadmap
+    url: https://github.com/DSamuelHodge/amazing-skin/blob/main/PRODUCTION_ROADMAP.md
+    about: Source of truth for production-readiness work
