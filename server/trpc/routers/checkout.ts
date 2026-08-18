@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { createTRPCRouter, publicProcedure } from '../init';
-import { cloneCart, createEmptyCart, getSessionCart, saveSessionCart } from '../cart-store';
+import { clearCart, getOrCreateCart } from '../cart-db';
 import type { CartItem } from '@/src/types';
 
 const KNOWN_CODES = new Set(['SAVE10', 'LUMINA10', 'GLOW20', 'WELCOME50', 'BOTANICAL']);
@@ -75,8 +75,8 @@ export const checkoutRouter = createTRPCRouter({
         })
         .optional(),
     )
-    .mutation(({ ctx, input }) => {
-      const cart = getSessionCart(ctx.sessionId);
+    .mutation(async ({ ctx, input }) => {
+      const cart = await getOrCreateCart({ sessionId: ctx.sessionId, userId: ctx.userId });
       return calculatePricing(cart.items, {
         discountCode: input?.discountCode ?? cart.discountCode ?? undefined,
         shippingMethod: input?.shippingMethod ?? 'eco',
@@ -87,11 +87,11 @@ export const checkoutRouter = createTRPCRouter({
 
   createOrder: publicProcedure
     .input(z.any().optional())
-    .mutation(({ ctx, input }) => {
-      const cart = getSessionCart(ctx.sessionId);
+    .mutation(async ({ ctx, input }) => {
+      const cart = await getOrCreateCart({ sessionId: ctx.sessionId, userId: ctx.userId });
       const orderId = `LUM-${Math.floor(100000 + Math.random() * 900000)}`;
-      const snapshot = cloneCart(cart);
-      saveSessionCart(ctx.sessionId, createEmptyCart(ctx.sessionId));
+      const snapshot = cart;
+      await clearCart({ sessionId: ctx.sessionId, userId: ctx.userId });
       return {
         orderId,
         success: true as const,

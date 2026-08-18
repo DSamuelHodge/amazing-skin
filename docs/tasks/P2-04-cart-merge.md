@@ -12,10 +12,10 @@ Persist carts in `carts` / `cart_items`. Guest carts key off `anonymousSessionId
 
 ## Acceptance criteria
 
-- [ ] `cart.get|addItem|updateItem|removeItem|applyDiscountCode|removeDiscountCode|mergeGuestCart` work against the DB
-- [ ] Cart survives refresh (cookie / session id)
-- [ ] Sign-in merges quantities and never exceeds `stock_quantity - reserved_quantity`
-- [ ] Unique `(cartId, variantId)` is respected
+- [x] `cart.get|addItem|updateItem|removeItem|applyDiscountCode|removeDiscountCode|mergeGuestCart` work against the DB
+- [x] Cart survives refresh (cookie / session id)
+- [x] Sign-in merges quantities and never exceeds `stock_quantity - reserved_quantity`
+- [x] Unique `(cartId, variantId)` is respected
 
 ## Implementation notes
 
