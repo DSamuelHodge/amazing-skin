@@ -104,6 +104,91 @@ export const trpc = {
       },
     },
   },
+  customer: {
+    me: {
+      useQuery: () =>
+        useQuery({
+          queryKey: ['customer', 'me'],
+          queryFn: () => trpcClient.customer.me.query(),
+        }),
+    },
+    orders: {
+      useQuery: () =>
+        useQuery({
+          queryKey: ['customer', 'orders'],
+          queryFn: () => trpcClient.customer.orders.query(),
+        }),
+    },
+    addresses: {
+      list: {
+        useQuery: () =>
+          useQuery({
+            queryKey: ['customer', 'addresses'],
+            queryFn: () => trpcClient.customer.addresses.list.query(),
+          }),
+      },
+      create: {
+        useMutation: () => {
+          const queryClient = useQueryClient();
+          return useMutation({
+            mutationFn: (input: Parameters<typeof trpcClient.customer.addresses.create.mutate>[0]) =>
+              trpcClient.customer.addresses.create.mutate(input),
+            onSuccess: () => queryClient.invalidateQueries({ queryKey: ['customer', 'addresses'] }),
+          });
+        },
+      },
+      remove: {
+        useMutation: () => {
+          const queryClient = useQueryClient();
+          return useMutation({
+            mutationFn: (input: { id: string }) => trpcClient.customer.addresses.remove.mutate(input),
+            onSuccess: () => queryClient.invalidateQueries({ queryKey: ['customer', 'addresses'] }),
+          });
+        },
+      },
+      setDefault: {
+        useMutation: () => {
+          const queryClient = useQueryClient();
+          return useMutation({
+            mutationFn: (input: { id: string; type: 'shipping' | 'billing' }) =>
+              trpcClient.customer.addresses.setDefault.mutate(input),
+            onSuccess: () => queryClient.invalidateQueries({ queryKey: ['customer', 'addresses'] }),
+          });
+        },
+      },
+    },
+    updateSkinProfile: {
+      useMutation: () => {
+        const queryClient = useQueryClient();
+        return useMutation({
+          mutationFn: (input: {
+            primarySkinType: 'dry' | 'oily' | 'combination' | 'sensitive' | 'normal';
+            skinConcerns: string[];
+          }) => trpcClient.customer.updateSkinProfile.mutate(input),
+          onSuccess: () => queryClient.invalidateQueries({ queryKey: ['customer', 'me'] }),
+        });
+      },
+    },
+    wishlist: {
+      list: {
+        useQuery: () =>
+          useQuery({
+            queryKey: ['customer', 'wishlist'],
+            queryFn: () => trpcClient.customer.wishlist.list.query(),
+          }),
+      },
+      toggle: {
+        useMutation: () => {
+          const queryClient = useQueryClient();
+          return useMutation({
+            mutationFn: (input: { productId: string }) =>
+              trpcClient.customer.wishlist.toggle.mutate(input),
+            onSuccess: () => queryClient.invalidateQueries({ queryKey: ['customer', 'wishlist'] }),
+          });
+        },
+      },
+    },
+  },
   cart: {
     get: {
       useQuery: () => {
