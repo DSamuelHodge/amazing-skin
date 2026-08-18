@@ -15,7 +15,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       secondary: "border border-emerald-800/80 bg-forest-elevated text-emerald-50 hover:border-emerald-500 hover:bg-emerald-950/50",
       outline: "border border-emerald-800/80 text-emerald-100 hover:border-emerald-500 hover:bg-emerald-900/30",
       ghost: "text-stone-700 hover:text-stone-900",
-      light: "bg-stone-900 text-canvas-bg hover:bg-stone-800",
+      light: "bg-stone-900 text-forest-text hover:bg-stone-800",
       lightOutline: "border border-stone-300 bg-white/70 text-stone-900 hover:bg-white",
       dark: "border border-emerald-700/80 bg-forest-surface text-emerald-100 hover:border-emerald-400 hover:bg-forest-bg",
     };
