@@ -93,7 +93,7 @@ async function main() {
     .values({
       id: IDS.agentProfile,
       userId: IDS.agentUser,
-      firstName: 'Lumina',
+      firstName: 'Hodge',
       lastName: 'Agent',
       loyaltyTier: 'Founder',
       loyaltyPoints: 0,
@@ -101,7 +101,7 @@ async function main() {
     .onConflictDoUpdate({
       target: customerProfiles.userId,
       set: {
-        firstName: 'Lumina',
+        firstName: 'Hodge',
         lastName: 'Agent',
         loyaltyTier: 'Founder',
       },
@@ -399,21 +399,31 @@ async function main() {
     });
   }
 
+  if (glow.variants.length !== GLOW_VARIANT_IDS.length) {
+    throw new Error(
+      `Expected ${GLOW_VARIANT_IDS.length} glow variants, received ${glow.variants.length}`,
+    );
+  }
+
   const variantRows = [
-    ...glow.variants.map((variant, index) => ({
-      id: GLOW_VARIANT_IDS[index],
-      productId: IDS.prodGlow,
-      sku: variant.sku,
-      name: variant.name,
-      price: money(variant.price),
-      compareAtPrice: variant.compareAtPrice != null ? money(variant.compareAtPrice) : null,
-      stockQuantity: variant.stockQuantity,
-      reservedQuantity: 0,
-      lowStockThreshold: 10,
-      weightGrams: Number.parseInt(variant.name, 10) || 30,
-      isActive: variant.isActive,
-      displayOrder: variant.displayOrder,
-    })),
+    ...GLOW_VARIANT_IDS.flatMap((id, index) => {
+      const variant = glow.variants[index];
+      if (!variant) return [];
+      return [{
+        id,
+        productId: IDS.prodGlow,
+        sku: variant.sku,
+        name: variant.name,
+        price: money(variant.price),
+        compareAtPrice: variant.compareAtPrice != null ? money(variant.compareAtPrice) : null,
+        stockQuantity: variant.stockQuantity,
+        reservedQuantity: 0,
+        lowStockThreshold: 10,
+        weightGrams: Number.parseInt(variant.name, 10) || 30,
+        isActive: variant.isActive,
+        displayOrder: variant.displayOrder,
+      }];
+    }),
     {
       id: IDS.varLbs30,
       productId: IDS.prodBarrier,
@@ -509,21 +519,23 @@ async function main() {
   }
 
   const attributeRows = [
-    ...glow.variants.flatMap((variant, index) =>
-      variant.attributes.map((attr, attrIndex) => ({
-        id: `44444444-4444-4444-8444-4444444444${String(index * 10 + attrIndex + 1).padStart(2, '0')}`,
-        variantId: GLOW_VARIANT_IDS[index],
+    ...GLOW_VARIANT_IDS.flatMap((variantId, index) => {
+      const variant = glow.variants[index];
+      if (!variant) return [];
+      return variant.attributes.map((attr, attrIndex) => ({
+        id: `44444444-4444-4444-a444-0000000000${String(index * 10 + attrIndex + 1).padStart(2, '0')}`,
+        variantId,
         attributeType: attr.attributeType,
         value: attr.value,
         hexCode: attr.hexCode ?? null,
-      })),
-    ),
-    { id: '44444444-4444-4444-8444-444444444411', variantId: IDS.varLbs30, attributeType: 'size', value: treatStep.size, hexCode: null },
-    { id: '44444444-4444-4444-8444-444444444412', variantId: IDS.varCmc120, attributeType: 'size', value: cleanseStep.size, hexCode: null },
-    { id: '44444444-4444-4444-8444-444444444413', variantId: IDS.varVlm50, attributeType: 'size', value: sealStep.size, hexCode: null },
-    { id: '44444444-4444-4444-8444-444444444414', variantId: IDS.varMrm60, attributeType: 'size', value: midnightArrival.size, hexCode: null },
-    { id: '44444444-4444-4444-8444-444444444415', variantId: IDS.varVoc150, attributeType: 'size', value: velvetOilArrival.size, hexCode: null },
-    { id: '44444444-4444-4444-8444-444444444416', variantId: IDS.varDds50, attributeType: 'size', value: daylightArrival.size, hexCode: null },
+      }));
+    }),
+    { id: '44444444-4444-4444-b444-000000000001', variantId: IDS.varLbs30, attributeType: 'size', value: treatStep.size, hexCode: null },
+    { id: '44444444-4444-4444-b444-000000000002', variantId: IDS.varCmc120, attributeType: 'size', value: cleanseStep.size, hexCode: null },
+    { id: '44444444-4444-4444-b444-000000000003', variantId: IDS.varVlm50, attributeType: 'size', value: sealStep.size, hexCode: null },
+    { id: '44444444-4444-4444-b444-000000000004', variantId: IDS.varMrm60, attributeType: 'size', value: midnightArrival.size, hexCode: null },
+    { id: '44444444-4444-4444-b444-000000000005', variantId: IDS.varVoc150, attributeType: 'size', value: velvetOilArrival.size, hexCode: null },
+    { id: '44444444-4444-4444-b444-000000000006', variantId: IDS.varDds50, attributeType: 'size', value: daylightArrival.size, hexCode: null },
   ];
 
   for (const row of attributeRows) {
@@ -536,7 +548,7 @@ async function main() {
 
   const imageRows = [
     ...glow.images.map((image, index) => ({
-      id: `66666666-6666-4666-8666-6666666666${String(index + 1).padStart(2, '0')}`,
+      id: `66666666-6666-4666-a666-0000000000${String(index + 1).padStart(2, '0')}`,
       productId: IDS.prodGlow,
       variantId: null as string | null,
       imageUrl: image.imageUrl,
@@ -545,7 +557,7 @@ async function main() {
       displayOrder: image.displayOrder,
     })),
     {
-      id: '66666666-6666-4666-8666-666666666611',
+      id: '66666666-6666-4666-b666-000000000001',
       productId: IDS.prodBarrier,
       variantId: null,
       imageUrl: barrierShop.image,
@@ -554,7 +566,7 @@ async function main() {
       displayOrder: 1,
     },
     {
-      id: '66666666-6666-4666-8666-666666666612',
+      id: '66666666-6666-4666-b666-000000000002',
       productId: IDS.prodCloudMelt,
       variantId: null,
       imageUrl: cloudMeltShop.image,
@@ -563,7 +575,7 @@ async function main() {
       displayOrder: 1,
     },
     {
-      id: '66666666-6666-4666-8666-666666666613',
+      id: '66666666-6666-4666-b666-000000000003',
       productId: IDS.prodVelvetLock,
       variantId: null,
       imageUrl: velvetLockShop.image,
@@ -572,7 +584,7 @@ async function main() {
       displayOrder: 1,
     },
     {
-      id: '66666666-6666-4666-8666-666666666614',
+      id: '66666666-6666-4666-b666-000000000004',
       productId: IDS.prodMidnight,
       variantId: null,
       imageUrl: midnightArrival.image,
@@ -581,7 +593,7 @@ async function main() {
       displayOrder: 1,
     },
     {
-      id: '66666666-6666-4666-8666-666666666615',
+      id: '66666666-6666-4666-b666-000000000005',
       productId: IDS.prodVelvetOil,
       variantId: null,
       imageUrl: velvetOilArrival.image,
@@ -590,7 +602,7 @@ async function main() {
       displayOrder: 1,
     },
     {
-      id: '66666666-6666-4666-8666-666666666616',
+      id: '66666666-6666-4666-b666-000000000006',
       productId: IDS.prodDaylight,
       variantId: null,
       imageUrl: daylightArrival.image,
@@ -744,7 +756,7 @@ async function main() {
     });
   }
 
-  console.log('[db] Seed complete: superadmin agent, 3 categories, 7 products, 9 variants, 4 discount codes');
+  console.log('[db] Seed complete: 3 categories, 7 products, 9 variants, 4 discount codes');
 }
 
 main()
