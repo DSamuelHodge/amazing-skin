@@ -357,6 +357,12 @@ async function main() {
     });
   }
 
+  if (glow.variants.length !== GLOW_VARIANT_IDS.length) {
+    throw new Error(
+      `Expected ${GLOW_VARIANT_IDS.length} glow variants, received ${glow.variants.length}`,
+    );
+  }
+
   const variantRows = [
     ...GLOW_VARIANT_IDS.flatMap((id, index) => {
       const variant = glow.variants[index];

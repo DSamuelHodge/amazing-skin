@@ -20,7 +20,11 @@ export function isPostgresMode(): boolean {
 async function createDb(): Promise<AppDb> {
   if (isPostgresMode()) {
     const postgres = (await import('postgres')).default;
-    const client = postgres(process.env.DATABASE_URL!);
+    const client = postgres(process.env.DATABASE_URL!, {
+      max: 8,
+      idle_timeout: 20,
+      connect_timeout: 10,
+    });
     return drizzlePostgres({ client, schema }) as AppDb;
   }
 
