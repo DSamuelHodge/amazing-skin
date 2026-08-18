@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { authClient } from '@/lib/auth-client';
 import type { UserProfile, UserRole } from '@/src/lib/auth-types';
+import { trpcClient } from '@/src/lib/trpc';
+import { navigate } from '@/src/lib/nav';
 
 export type { UserProfile, UserRole };
 
@@ -73,12 +75,33 @@ export const useAuthStore = create<AuthState>()(
       openAuthModal: (tab = 'signin') => set({ isAuthModalOpen: true, authModalInitialTab: tab }),
       closeAuthModal: () => set({ isAuthModalOpen: false }),
 
-      openAdminDashboard: () => set({ isAdminDashboardOpen: true }),
+      openAdminDashboard: () => {
+        set({ isAdminDashboardOpen: false });
+        navigate('/admin');
+      },
       closeAdminDashboard: () => set({ isAdminDashboardOpen: false }),
 
       hydrateSession: async () => {
         set({ isLoading: true });
-        await applySession(set);
+        const profile = await applySession(set);
+        if (!profile) return;
+        try {
+          const me = await trpcClient.customer.me.query();
+          set({
+            user: {
+              ...profile,
+              id: me.userId,
+              role: (me.role as UserRole | null) ?? profile.role,
+              firstName: me.firstName || profile.firstName,
+              lastName: me.lastName || profile.lastName,
+              loyaltyPoints: me.loyaltyPoints,
+              loyaltyTier: me.loyaltyTier,
+              primarySkinType: me.primarySkinType ?? undefined,
+            },
+          });
+        } catch {
+          /* session profile is enough for guests without a commerce row */
+        }
       },
 
       signInWithPassword: async (email, password) => {
