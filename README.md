@@ -4,7 +4,7 @@ Clinical-calm skincare storefront. The repo is moving from a client-side prototy
 
 ## Stack
 
-React 19 · Vite · Tailwind v4 · Drizzle ORM · tRPC v11 · GraphQL (drizzle-graphql) · Stripe (Phase 3)
+React 19 · Vite · Tailwind v4 · Drizzle ORM · tRPC v11 · Better Auth · GraphQL (drizzle-graphql) · Stripe (Phase 3)
 
 Local/preview uses **PGLite** when `DATABASE_URL` is unset. Production expects Postgres (Neon / Cloud SQL / Supabase).
 
@@ -16,8 +16,21 @@ npm install
 npm run db:generate   # after schema changes
 npm run db:migrate
 npm run db:seed
-npm run dev           # storefront + /api/trpc + /graphql
+npm run dev           # storefront + /api/trpc + /api/auth + /graphql
 ```
+
+## Auth (Better Auth + Infrastructure)
+
+Email/password sessions mount at **`/api/auth/*`**. Better Auth Infrastructure (`dash()` + `sentinelClient()`) connects this app to [thenikkigcollection.com](https://thenikkigcollection.com) for the dashboard, audit log, and abuse protection.
+
+| File | Role |
+| --- | --- |
+| [`lib/auth.ts`](lib/auth.ts) | Server `betterAuth()` + Drizzle adapter + `dash()` / `sentinel()` |
+| [`lib/auth-client.ts`](lib/auth-client.ts) | Browser client + `dashClient()` / `sentinelClient()` |
+
+Env (see `.env.example`): `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_API_KEY`.
+
+Sign-up also upserts commerce `users` / `customer_profiles`. Email `hodge@agentmail.to` is `super_admin`. Magic-link UI stays informational until transactional email is wired.
 
 ## GraphQL CRUD (superadmin agent)
 

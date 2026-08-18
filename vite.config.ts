@@ -6,6 +6,9 @@ import luminaApiPlugin from './server/vite-plugin';
 
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
+  for (const [key, value] of Object.entries(env)) {
+    if (process.env[key] === undefined) process.env[key] = value;
+  }
   return {
     plugins: [react(), tailwindcss(), luminaApiPlugin()],
     define: {

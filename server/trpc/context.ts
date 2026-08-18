@@ -1,6 +1,12 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { randomUUID } from 'node:crypto';
 import type { NodeHTTPCreateContextFnOptions } from '@trpc/server/adapters/node-http';
+import { fromNodeHeaders } from 'better-auth/node';
+import { eq } from 'drizzle-orm';
+import { getAuth } from '../../lib/auth';
+import { getDb } from '../../src/db/client';
+import { users } from '../../src/db/schema';
+import type { UserRole } from '../../src/lib/auth-types';
 
 export const SESSION_COOKIE = 'lumina_session_id';
 
@@ -34,9 +40,33 @@ export async function createContext(
     }
   }
 
+  let userId: string | null = null;
+  let role: UserRole | null = null;
+  let email: string | null = null;
+
+  try {
+    const auth = await getAuth();
+    const session = await auth.api.getSession({
+      headers: fromNodeHeaders(opts.req.headers),
+    });
+    if (session?.user) {
+      email = session.user.email;
+      const db = await getDb();
+      const commerce = await db.query.users.findFirst({
+        where: eq(users.email, session.user.email.toLowerCase()),
+      });
+      userId = commerce?.id ?? session.user.id;
+      role = (commerce?.role as UserRole | undefined) ?? 'customer';
+    }
+  } catch (err) {
+    console.error('[auth] session lookup failed', err);
+  }
+
   return {
     sessionId,
-    userId: null as string | null,
+    userId,
+    role,
+    email,
   };
 }
 

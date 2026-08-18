@@ -15,6 +15,20 @@
       "when": 1787088206508,
       "tag": "0001_rating-range-check",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1787089533886,
+      "tag": "0002_better-auth",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1787089708278,
+      "tag": "0003_account-issuer",
+      "breakpoints": true
     }
   ]
 }

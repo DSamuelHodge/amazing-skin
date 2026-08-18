@@ -19,17 +19,23 @@ import OrderConfirmedPage from "@/src/routes/order-confirmed";
 import { AuthModal } from "@/src/components/auth/AuthModal";
 import { AdminDashboardModal } from "@/src/components/admin/AdminDashboardModal";
 import { Toaster } from "sonner";
+import { useAuthStore } from "@/src/lib/authStore";
 
 const queryClient = new QueryClient();
 
 export default function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
+  const hydrateSession = useAuthStore((s) => s.hydrateSession);
 
   useEffect(() => {
     const onLocationChange = () => setCurrentPath(window.location.pathname);
     window.addEventListener('popstate', onLocationChange);
     return () => window.removeEventListener('popstate', onLocationChange);
   }, []);
+
+  useEffect(() => {
+    void hydrateSession();
+  }, [hydrateSession]);
 
   const isProductPage = currentPath.startsWith('/product/');
   const isCheckoutPage = currentPath === '/checkout';
