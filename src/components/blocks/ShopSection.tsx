@@ -7,23 +7,88 @@ import type { MouseEvent } from "react";
 import { trpc, useCartStore } from "@/src/lib/trpc";
 import { navigate, shopProductPath, shopVariantId } from "@/src/lib/nav";
 
+type ShopItem = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  price: number;
+  size: string | null;
+  tag: string;
+  image: string;
+  rating: number | null;
+  reviews: string | null;
+  collection: string;
+  variantId: string | null;
+  note: string;
+};
+
+function formatPrice(value: number | string) {
+  const amount = typeof value === 'number' ? value : Number(String(value).replace(/[^0-9.]/g, '')) || 0;
+  return `$${amount.toFixed(0)}`;
+}
+
 export function ShopSection() {
   const { shop } = mockData;
   const addItem = trpc.cart.addItem.useMutation();
   const { openDrawer } = useCartStore();
+  const catalogQuery = trpc.catalog.getProducts.useQuery({ limit: 24 });
 
-  const handleAdd = (title: string, event?: MouseEvent) => {
+  const dbItems = (catalogQuery.data?.items ?? []) as ShopItem[];
+  const arrivals = dbItems.filter((item) => item.collection === 'new');
+  const favorites = dbItems.filter((item) => item.collection === 'top' || item.collection === 'featured');
+
+  const newArrivals: ShopItem[] =
+    arrivals.length > 0
+      ? arrivals
+      : shop.newArrivals.map((product) => ({
+          id: product.title,
+          name: product.title,
+          slug: shopProductPath(product.title).replace('/product/', ''),
+          description: product.description,
+          price: Number(String(product.price).replace(/[^0-9.]/g, '')) || 0,
+          size: product.size,
+          tag: product.tag,
+          image: product.image,
+          rating: null,
+          reviews: null,
+          collection: 'new',
+          variantId: shopVariantId(product.title),
+          note: product.note,
+        }));
+
+  const topProducts: ShopItem[] =
+    favorites.length > 0
+      ? favorites
+      : shop.topProducts.map((product) => ({
+          id: product.title,
+          name: product.title,
+          slug: shopProductPath(product.title).replace('/product/', ''),
+          description: product.description,
+          price: Number(String(product.price).replace(/[^0-9.]/g, '')) || 0,
+          size: product.size,
+          tag: product.tag,
+          image: product.image,
+          rating: product.rating,
+          reviews: product.reviews,
+          collection: 'top',
+          variantId: shopVariantId(product.title),
+          note: product.quote,
+        }));
+
+  const handleAdd = (product: ShopItem, event?: MouseEvent) => {
     event?.preventDefault();
     event?.stopPropagation();
+    const variantId = product.variantId || shopVariantId(product.name);
     addItem.mutate(
-      { variantId: shopVariantId(title), quantity: 1 },
+      { variantId, quantity: 1 },
       {
         onSuccess: () => {
-          toast.success(`${title} added to bag`);
+          toast.success(`${product.name} added to bag`);
           openDrawer();
         },
         onError: () => {
-          toast.error(`Could not add ${title}`);
+          toast.error(`Could not add ${product.name}`);
         },
       },
     );
@@ -90,9 +155,9 @@ export function ShopSection() {
             </div>
 
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {shop.newArrivals.map((product, i) => (
+              {newArrivals.map((product, i) => (
                 <motion.article 
-                  key={product.title}
+                  key={product.id}
                   className="group rounded-3xl border border-stone-200 bg-canvas-surface overflow-hidden flex flex-col shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -101,8 +166,8 @@ export function ShopSection() {
                 >
                   <div className="relative">
                     <div className="absolute inset-0 bg-gradient-to-t from-stone-900/20 via-transparent to-transparent pointer-events-none"></div>
-                    <a href={shopProductPath(product.title)}>
-                      <img src={product.image} alt={product.title} className="sm:h-56 w-full h-48 object-cover" />
+                    <a href={`/product/${product.slug}`}>
+                      <img src={product.image} alt={product.name} className="sm:h-56 w-full h-48 object-cover" />
                     </a>
                     <div className="absolute top-3 left-3">
                       <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[0.68rem] font-medium bg-stone-900 text-forest-text shadow-sm">
@@ -114,8 +179,8 @@ export function ShopSection() {
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <h4 className="font-playfair text-lg font-semibold tracking-tight text-stone-900">
-                          <a href={shopProductPath(product.title)} className="hover:underline underline-offset-4">
-                            {product.title}
+                          <a href={`/product/${product.slug}`} className="hover:underline underline-offset-4">
+                            {product.name}
                           </a>
                         </h4>
                         <p className="mt-1 text-xs sm:text-sm text-stone-700">
@@ -123,20 +188,20 @@ export function ShopSection() {
                         </p>
                       </div>
                       <div className="flex flex-col items-end text-xs text-stone-700">
-                        <span className="font-semibold">{product.price}</span>
+                        <span className="font-semibold">{formatPrice(product.price)}</span>
                         <span className="text-stone-600 mt-0.5">{product.size}</span>
                       </div>
                     </div>
                     <div className="mt-4 flex items-center justify-between gap-3 text-[0.72rem] sm:text-xs">
                       <div className="flex items-center gap-1.5 text-stone-700">
                         <span className="w-1.5 h-1.5 rounded-full bg-stone-900"></span>
-                        <span>{product.note}</span>
+                        <span>{product.note || 'Clinical calm'}</span>
                       </div>
                       <Button
                         type="button"
                         variant={i === 0 ? "light" : "lightOutline"}
                         size="sm"
-                        onClick={(event) => handleAdd(product.title, event)}
+                        onClick={(event) => handleAdd(product, event)}
                         disabled={addItem.isPending}
                       >
                         Add
@@ -171,17 +236,17 @@ export function ShopSection() {
             </div>
 
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-5">
-              {shop.topProducts.map((product, i) => (
+              {topProducts.map((product, i) => (
                 <motion.article 
-                  key={product.title}
+                  key={product.id}
                   className="group rounded-3xl border border-stone-200 bg-canvas-surface px-5 py-5 sm:px-6 sm:py-6 flex flex-col shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
                 >
-                  <a href={shopProductPath(product.title)} className="relative mb-4 rounded-2xl overflow-hidden block">
-                    <img src={product.image} alt={product.title} className="sm:h-40 w-full h-32 object-cover" />
+                  <a href={`/product/${product.slug}`} className="relative mb-4 rounded-2xl overflow-hidden block">
+                    <img src={product.image} alt={product.name} className="sm:h-40 w-full h-32 object-cover" />
                   </a>
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -189,8 +254,8 @@ export function ShopSection() {
                         {product.tag}
                       </p>
                       <h4 className="font-playfair text-lg font-semibold tracking-tight text-stone-900">
-                        <a href={shopProductPath(product.title)} className="hover:underline underline-offset-4">
-                          {product.title}
+                        <a href={`/product/${product.slug}`} className="hover:underline underline-offset-4">
+                          {product.name}
                         </a>
                       </h4>
                       <p className="mt-1 text-xs sm:text-sm text-stone-700">
@@ -198,7 +263,7 @@ export function ShopSection() {
                       </p>
                     </div>
                     <div className="flex flex-col items-end text-xs text-stone-700">
-                      <span className="font-semibold">{product.price}</span>
+                      <span className="font-semibold">{formatPrice(product.price)}</span>
                       <span className="mt-0.5 text-stone-600">{product.size}</span>
                     </div>
                   </div>
@@ -206,24 +271,21 @@ export function ShopSection() {
                     <div className="flex items-center gap-1.5 text-stone-700">
                       <div className="flex items-center text-amber-400">
                         <Star className="w-3.5 h-3.5 fill-current" />
-                        <span className="ml-0.5">{product.rating}</span>
+                        <span className="ml-0.5">{product.rating ?? '—'}</span>
                       </div>
-                      <span className="text-stone-600">• {product.reviews} reviews</span>
+                      <span className="text-stone-600">• {product.reviews ?? '0'} reviews</span>
                     </div>
                     <Button
                       type="button"
                       variant={i === 0 ? "light" : "lightOutline"}
                       size="sm"
-                      onClick={(event) => handleAdd(product.title, event)}
+                      onClick={(event) => handleAdd(product, event)}
                       disabled={addItem.isPending}
                     >
                       Add
                       <Plus className="w-3.5 h-3.5" />
                     </Button>
                   </div>
-                  <p className="mt-3 text-[0.7rem] text-stone-700 line-clamp-2">
-                    {product.quote}
-                  </p>
                 </motion.article>
               ))}
             </div>
