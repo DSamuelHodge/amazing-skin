@@ -80,8 +80,9 @@ async function main() {
       isEmailVerified: true,
     })
     .onConflictDoUpdate({
-      target: users.email,
+      target: users.id,
       set: {
+        email: AGENT_SUPERADMIN.email,
         role: 'super_admin',
         isEmailVerified: true,
       },
