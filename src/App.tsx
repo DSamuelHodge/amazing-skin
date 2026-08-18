@@ -19,6 +19,8 @@ import OrderConfirmedPage from "@/src/routes/order-confirmed";
 import { AuthModal } from "@/src/components/auth/AuthModal";
 import { AdminDashboardModal } from "@/src/components/admin/AdminDashboardModal";
 import { Toaster } from "sonner";
+import { useAuthStore } from "@/src/lib/authStore";
+import { navigate } from "@/src/lib/nav";
 
 const queryClient = new QueryClient();
 
@@ -28,7 +30,35 @@ export default function App() {
   useEffect(() => {
     const onLocationChange = () => setCurrentPath(window.location.pathname);
     window.addEventListener('popstate', onLocationChange);
-    return () => window.removeEventListener('popstate', onLocationChange);
+
+    const onClick = (event: MouseEvent) => {
+      if (event.defaultPrevented || event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const target = event.target as HTMLElement | null;
+      const anchor = target?.closest?.('a');
+      if (!anchor || anchor.target === '_blank' || anchor.hasAttribute('download')) return;
+      const href = anchor.getAttribute('href');
+      if (!href || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+      if (href.startsWith('#')) {
+        event.preventDefault();
+        navigate(href);
+        return;
+      }
+      if (href.startsWith('/') && !href.startsWith('//')) {
+        event.preventDefault();
+        navigate(href);
+      }
+    };
+
+    document.addEventListener('click', onClick);
+    return () => {
+      window.removeEventListener('popstate', onLocationChange);
+      document.removeEventListener('click', onClick);
+    };
+  }, []);
+
+  useEffect(() => {
+    void useAuthStore.getState().hydrateSession();
   }, []);
 
   const isProductPage = currentPath.startsWith('/product/');
@@ -41,7 +71,7 @@ export default function App() {
         <Navbar />
         <main className="flex-1 w-full">
           {isProductPage ? (
-            <ProductDetailPage />
+            <ProductDetailPage key={currentPath} />
           ) : isCheckoutPage ? (
             <CheckoutPage />
           ) : isOrderConfirmedPage ? (

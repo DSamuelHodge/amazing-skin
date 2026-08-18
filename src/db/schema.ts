@@ -529,3 +529,5 @@ export const insertCartSchema = createInsertSchema(carts);
 export const selectCartSchema = createSelectSchema(carts);
 export type DbCart = typeof carts.$inferSelect;
 export type NewDbCart = typeof carts.$inferInsert;
+
+export * from './auth-schema';

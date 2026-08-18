@@ -4,10 +4,10 @@ export const mockData = {
   nav: {
     logo: "https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/296289e8-d1b7-46fb-a6d8-f52a9f0e4569_320w.png",
     links: [
-      { label: "Rituals", href: "#" },
-      { label: "Ingredients", href: "#" },
-      { label: "Results", href: "#" },
-      { label: "Stories", href: "#" },
+      { label: "Rituals", href: "#evening-ritual" },
+      { label: "Ingredients", href: "#shop-section" },
+      { label: "Results", href: "#stats-section" },
+      { label: "Stories", href: "#cta-section" },
     ],
   },
   hero: {
@@ -256,10 +256,10 @@ export const mockData = {
   footer: {
     description: "Gentle, clinically-minded rituals for skin that’s easily overwhelmed.",
     links: [
-      { label: "Ingredients", href: "#" },
-      { label: "FAQ", href: "#" },
-      { label: "Contact", href: "#" },
-      { label: "Privacy", href: "#" }
+      { label: "Ingredients", href: "#shop-section" },
+      { label: "FAQ", href: "#cta-section" },
+      { label: "Contact", href: "#cta-section" },
+      { label: "Privacy", href: "#cta-section" }
     ]
   },
   productDetails: <Product>{

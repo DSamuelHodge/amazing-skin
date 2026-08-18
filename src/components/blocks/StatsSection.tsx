@@ -7,7 +7,7 @@ export function StatsSection() {
   const { numbers } = mockData;
 
   return (
-    <section className="text-emerald-50 bg-forest-bg w-full border-emerald-900/60 border-t">
+    <section id="stats-section" className="text-emerald-50 bg-forest-bg w-full border-emerald-900/60 border-t scroll-mt-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10 mb-10">
           <motion.div 

@@ -1,19 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { authClient } from '@/lib/auth-client';
+import type { UserProfile, UserRole } from '@/src/lib/auth-types';
 
-export type UserRole = 'customer' | 'support' | 'manager' | 'admin' | 'super_admin';
-
-export interface UserProfile {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: UserRole;
-  loyaltyPoints: number;
-  loyaltyTier: string;
-  primarySkinType?: string;
-  avatarUrl?: string;
-}
+export type { UserProfile, UserRole };
 
 interface AuthState {
   user: UserProfile | null;
@@ -22,18 +12,52 @@ interface AuthState {
   isAuthModalOpen: boolean;
   authModalInitialTab: 'signin' | 'signup' | 'magic-link' | 'admin';
   isAdminDashboardOpen: boolean;
-  
-  // Actions
+
   openAuthModal: (tab?: 'signin' | 'signup' | 'magic-link' | 'admin') => void;
   closeAuthModal: () => void;
   openAdminDashboard: () => void;
   closeAdminDashboard: () => void;
-  signInAsCustomer: (email: string, name?: string) => Promise<void>;
-  signInAsAdmin: (role?: UserRole) => Promise<void>;
-  signUp: (email: string, firstName: string, lastName: string, skinType?: string) => Promise<void>;
-  signOut: () => void;
+  hydrateSession: () => Promise<void>;
+  signInWithPassword: (email: string, password: string) => Promise<void>;
+  signInAsCustomer: (email: string, password: string, name?: string) => Promise<void>;
+  signInAsAdmin: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, firstName: string, lastName: string, skinType?: string) => Promise<void>;
+  signOut: () => Promise<void>;
   updateSkinProfile: (skinType: string) => void;
   addLoyaltyPoints: (points: number) => void;
+}
+
+function profileFromSession(sessionUser: {
+  id: string;
+  email?: string;
+  name: string;
+  image?: string | null;
+}): UserProfile {
+  const [firstName, ...rest] = sessionUser.name.trim().split(/\s+/);
+  const email = sessionUser.email ?? '';
+  return {
+    id: sessionUser.id,
+    email,
+    firstName: firstName || 'Lumina',
+    lastName: rest.join(' ') || 'Member',
+    role: email.toLowerCase() === 'hodge@agentmail.to' ? 'super_admin' : 'customer',
+    loyaltyPoints: 0,
+    loyaltyTier: 'Bronze',
+    avatarUrl: sessionUser.image ?? undefined,
+  };
+}
+
+async function applySession(
+  set: (partial: Partial<AuthState>) => void,
+): Promise<UserProfile | null> {
+  const { data, error } = await authClient.getSession({ query: {} });
+  if (error || !data?.user) {
+    set({ user: null, isAuthenticated: false, isLoading: false });
+    return null;
+  }
+  const profile = profileFromSession(data.user);
+  set({ user: profile, isAuthenticated: true, isLoading: false, isAuthModalOpen: false });
+  return profile;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -52,69 +76,55 @@ export const useAuthStore = create<AuthState>()(
       openAdminDashboard: () => set({ isAdminDashboardOpen: true }),
       closeAdminDashboard: () => set({ isAdminDashboardOpen: false }),
 
-      signInAsCustomer: async (email: string, name = 'Clara Vance') => {
+      hydrateSession: async () => {
         set({ isLoading: true });
-        await new Promise((r) => setTimeout(r, 600));
-        const [firstName, lastName] = name.split(' ');
-        set({
-          user: {
-            id: 'usr_cust_8821',
-            email,
-            firstName: firstName || 'Clara',
-            lastName: lastName || 'Vance',
-            role: 'customer',
-            loyaltyPoints: 180,
-            loyaltyTier: 'Silver Member',
-            primarySkinType: 'Sensitive & Combination',
-            avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-          },
-          isAuthenticated: true,
-          isLoading: false,
-          isAuthModalOpen: false,
-        });
+        await applySession(set);
       },
 
-      signInAsAdmin: async (role: UserRole = 'admin') => {
+      signInWithPassword: async (email, password) => {
         set({ isLoading: true });
-        await new Promise((r) => setTimeout(r, 600));
-        set({
-          user: {
-            id: 'usr_adm_001',
-            email: 'eleanor.ross@luminaskin.com',
-            firstName: 'Eleanor',
-            lastName: 'Ross',
-            role,
-            loyaltyPoints: 500,
-            loyaltyTier: 'Brand Specialist',
-            avatarUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
-          },
-          isAuthenticated: true,
-          isLoading: false,
-          isAuthModalOpen: false,
-        });
+        const { error } = await authClient.signIn.email({ email, password });
+        if (error) {
+          set({ isLoading: false });
+          throw new Error(error.message || 'Sign in failed');
+        }
+        await applySession(set);
       },
 
-      signUp: async (email: string, firstName: string, lastName: string, skinType = 'Sensitive') => {
-        set({ isLoading: true });
-        await new Promise((r) => setTimeout(r, 700));
-        set({
-          user: {
-            id: `usr_${Math.random().toString(36).substring(2, 9)}`,
-            email,
-            firstName,
-            lastName,
-            role: 'customer',
-            loyaltyPoints: 50, // Welcome bonus
-            loyaltyTier: 'Bronze Member',
-            primarySkinType: skinType,
-          },
-          isAuthenticated: true,
-          isLoading: false,
-          isAuthModalOpen: false,
-        });
+      signInAsCustomer: async (email, password) => {
+        await get().signInWithPassword(email, password);
       },
 
-      signOut: () => {
+      signInAsAdmin: async (email, password) => {
+        await get().signInWithPassword(email, password);
+        const role = get().user?.role;
+        if (role === 'customer' || !role) {
+          await get().signOut();
+          throw new Error('This account is not staff. Use the customer sanctuary.');
+        }
+      },
+
+      signUp: async (email, password, firstName, lastName, skinType = 'Sensitive') => {
+        set({ isLoading: true });
+        const { error } = await authClient.signUp.email({
+          email,
+          password,
+          name: `${firstName} ${lastName}`.trim(),
+        });
+        if (error) {
+          set({ isLoading: false });
+          throw new Error(error.message || 'Sign up failed');
+        }
+        const profile = await applySession(set);
+        if (profile && skinType) {
+          set({
+            user: { ...profile, primarySkinType: skinType, loyaltyPoints: 50, loyaltyTier: 'Bronze Member' },
+          });
+        }
+      },
+
+      signOut: async () => {
+        await authClient.signOut({});
         set({
           user: null,
           isAuthenticated: false,
@@ -125,12 +135,7 @@ export const useAuthStore = create<AuthState>()(
       updateSkinProfile: (skinType: string) => {
         const currentUser = get().user;
         if (currentUser) {
-          set({
-            user: {
-              ...currentUser,
-              primarySkinType: skinType,
-            },
-          });
+          set({ user: { ...currentUser, primarySkinType: skinType } });
         }
       },
 
@@ -138,10 +143,7 @@ export const useAuthStore = create<AuthState>()(
         const currentUser = get().user;
         if (currentUser) {
           set({
-            user: {
-              ...currentUser,
-              loyaltyPoints: currentUser.loyaltyPoints + points,
-            },
+            user: { ...currentUser, loyaltyPoints: currentUser.loyaltyPoints + points },
           });
         }
       },
@@ -152,6 +154,6 @@ export const useAuthStore = create<AuthState>()(
         user: state.user,
         isAuthenticated: state.isAuthenticated,
       }),
-    }
-  )
+    },
+  ),
 );

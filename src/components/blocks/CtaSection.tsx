@@ -2,12 +2,13 @@ import { mockData } from "@/src/data/mockData";
 import { Button } from "@/src/components/ui/Button";
 import { ArrowRight, Check } from "lucide-react";
 import { motion } from "motion/react";
+import { navigate } from "@/src/lib/nav";
 
 export function CtaSection() {
   const { cta } = mockData;
 
   return (
-    <section className="text-emerald-50 bg-forest-bg w-full border-t border-emerald-900/60">
+    <section id="cta-section" className="text-emerald-50 bg-forest-bg w-full border-t border-emerald-900/60 scroll-mt-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
         <div className="flex flex-col lg:flex-row items-center lg:items-stretch gap-10">
           <motion.div 
@@ -28,11 +29,11 @@ export function CtaSection() {
             </p>
 
             <div className="mt-7 flex flex-wrap items-center gap-3 sm:gap-4">
-              <Button variant="primary" size="md">
+              <Button variant="primary" size="md" onClick={() => navigate('#cta-section')}>
                 Start my ritual quiz
                 <ArrowRight className="w-4 h-4" />
               </Button>
-              <Button variant="dark" size="md">
+              <Button variant="dark" size="md" onClick={() => navigate('#shop-section')}>
                 Browse all products
                 <ArrowRight className="w-4 h-4 text-emerald-300" />
               </Button>

@@ -3,6 +3,7 @@ import { Button } from "@/src/components/ui/Button";
 import { ArrowRight, ShoppingBag } from "lucide-react";
 import { useCartStore, trpc } from "@/src/lib/trpc";
 import { CustomerMenu } from "@/src/components/customer/CustomerMenu";
+import { navigate } from "@/src/lib/nav";
 
 export function Navbar() {
   const { openDrawer } = useCartStore();
@@ -44,9 +45,12 @@ export function Navbar() {
             variant="primary" 
             size="sm" 
             onClick={() => {
-              const shopEl = document.getElementById('shop-section') || document.querySelector('section');
-              if (shopEl) shopEl.scrollIntoView({ behavior: 'smooth' });
-              else window.location.href = '/product/lumina-glow-serum';
+              if (window.location.pathname !== '/') {
+                navigate('/');
+                requestAnimationFrame(() => navigate('#shop-section'));
+                return;
+              }
+              navigate('#shop-section');
             }}
           >
             Shop ritual

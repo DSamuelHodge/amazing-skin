@@ -3,6 +3,7 @@ import { Button } from "@/src/components/ui/Button";
 import { Badge } from "@/src/components/ui/Badge";
 import { Sparkles, PlayCircle, Star, Droplets, Leaf, HeartHandshake } from "lucide-react";
 import { motion } from "motion/react";
+import { navigate } from "@/src/lib/nav";
 
 export function HeroSection() {
   const { hero } = mockData;
@@ -25,11 +26,11 @@ export function HeroSection() {
             {hero.description}
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-4">
-            <Button variant="primary" size="lg">
+            <Button variant="primary" size="lg" onClick={() => navigate('#shop-section')}>
               Start your ritual
               <Sparkles className="w-4 h-4" />
             </Button>
-            <Button variant="secondary" size="lg">
+            <Button variant="secondary" size="lg" onClick={() => navigate('#evening-ritual')}>
               <PlayCircle className="w-4 h-4 text-emerald-300" />
               Watch 60s overview
             </Button>

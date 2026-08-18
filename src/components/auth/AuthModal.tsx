@@ -47,7 +47,6 @@ export function AuthModal() {
   const [lastName, setLastName] = useState('');
   const [skinType, setSkinType] = useState('Sensitive');
   const [adminRole, setAdminRole] = useState<UserRole>('admin');
-  const [adminPin, setAdminPin] = useState('884210');
   const [magicLinkSent, setMagicLinkSent] = useState(false);
 
   if (!isAuthModalOpen) return null;
@@ -68,36 +67,60 @@ export function AuthModal() {
 
   const handleCustomerSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) {
-      toast.error('Please enter your email address');
+    if (!email || !password) {
+      toast.error('Please enter your email and password');
       return;
     }
-    await signInAsCustomer(email, 'Clara Vance');
-    handleMergeGuestCart();
-    toast.success('Welcome back to Lumina Skin Rituals', {
-      description: 'Your saved rituals and cart have been synchronized.'
-    });
+    try {
+      await signInAsCustomer(email, password);
+      handleMergeGuestCart();
+      toast.success('Welcome back to Lumina Skin Rituals', {
+        description: 'Your saved rituals and cart have been synchronized.',
+      });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Sign in failed');
+    }
   };
 
   const handleQuickDemoCustomer = async () => {
-    await signInAsCustomer('clara.vance@example.com', 'Clara Vance');
-    handleMergeGuestCart();
-    toast.success('Signed in as Clara Vance (Silver Member)', {
-      description: 'Loaded 180 loyalty points & sensitive skin profile.'
-    });
+    const demo = {
+      email: 'clara.vance@example.com',
+      password: 'LuminaRitual1!',
+    };
+    try {
+      try {
+        await signInAsCustomer(demo.email, demo.password);
+      } catch {
+        await signUp(demo.email, demo.password, 'Clara', 'Vance', 'sensitive');
+      }
+      handleMergeGuestCart();
+      toast.success('Signed in as Clara Vance', {
+        description: 'Demo account via Better Auth email/password.',
+      });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Demo sign-in failed');
+    }
   };
 
   const handleCustomerSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !firstName || !lastName) {
+    if (!email || !firstName || !lastName || !password) {
       toast.error('Please fill in all required fields');
       return;
     }
-    await signUp(email, firstName, lastName, skinType);
-    handleMergeGuestCart();
-    toast.success('Welcome to Lumina!', {
-      description: '50 welcome loyalty points have been added to your profile.'
-    });
+    if (password.length < 8) {
+      toast.error('Password must be at least 8 characters');
+      return;
+    }
+    try {
+      await signUp(email, password, firstName, lastName, skinType);
+      handleMergeGuestCart();
+      toast.success('Welcome to Lumina!', {
+        description: '50 welcome loyalty points have been added to your profile.',
+      });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Sign up failed');
+    }
   };
 
   const handleMagicLinkSubmit = async (e: React.FormEvent) => {
@@ -107,17 +130,25 @@ export function AuthModal() {
       return;
     }
     setMagicLinkSent(true);
-    toast.success('Secure magic link dispatched', {
-      description: `Check your inbox at ${email} to sign in with one click.`
+    toast.success('Magic link is not enabled yet', {
+      description: 'Use email and password for now. Passwordless ships with the email provider.',
     });
   };
 
   const handleAdminSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    await signInAsAdmin(adminRole);
-    toast.success(`Authenticated as ${adminRole.toUpperCase()}`, {
-      description: 'Audit log event: SEC-AUTH-SUCCESS (2FA Verified)'
-    });
+    if (!email || !password) {
+      toast.error('Staff email and password required');
+      return;
+    }
+    try {
+      await signInAsAdmin(email, password);
+      toast.success('Staff session verified', {
+        description: `Signed in as ${useAuthStore.getState().user?.role ?? adminRole}.`,
+      });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Staff sign-in failed');
+    }
   };
 
   return (
@@ -311,6 +342,8 @@ export function AuthModal() {
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder="••••••••••••"
                           className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-stone-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all"
+                          required
+                          minLength={8}
                         />
                         <button
                           type="button"
@@ -377,6 +410,19 @@ export function AuthModal() {
                         placeholder="you@example.com"
                         className="w-full px-3.5 py-2 rounded-xl border border-stone-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700"
                         required
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-stone-700 tracking-wide uppercase">Password</label>
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="At least 8 characters"
+                        className="w-full px-3.5 py-2 rounded-xl border border-stone-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700"
+                        required
+                        minLength={8}
                       />
                     </div>
 
@@ -510,32 +556,32 @@ export function AuthModal() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-stone-700 tracking-wide uppercase">Staff SSO Email</label>
+                    <label className="text-xs font-semibold text-stone-700 tracking-wide uppercase">Staff Email</label>
                     <div className="relative">
                       <Building2 className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                       <input
                         type="email"
-                        value="eleanor.ross@luminaskin.com"
-                        readOnly
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-200 bg-stone-100 text-stone-700 text-sm font-mono cursor-not-allowed"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="hodge@agentmail.to"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-300 bg-white text-stone-700 text-sm"
+                        required
                       />
                     </div>
                   </div>
 
                   <div className="space-y-1.5">
-                    <div className="flex justify-between items-center">
-                      <label className="text-xs font-semibold text-stone-700 tracking-wide uppercase">2FA Authenticator PIN</label>
-                      <span className="text-[11px] text-emerald-700 font-medium">Hardware Token Valid</span>
-                    </div>
+                    <label className="text-xs font-semibold text-stone-700 tracking-wide uppercase">Password</label>
                     <div className="relative">
                       <KeyRound className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                       <input
-                        type="text"
-                        value={adminPin}
-                        onChange={(e) => setAdminPin(e.target.value)}
-                        placeholder="6-digit PIN"
+                        type={showPassword ? 'text' : 'password'}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Staff password"
                         className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-300 bg-white text-sm font-mono tracking-wider focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700"
-                        maxLength={6}
+                        required
+                        minLength={8}
                       />
                     </div>
                   </div>

@@ -12,11 +12,11 @@ Implement `auth.signUp` / `signIn` / `signOut` / `getCurrentUser` with HttpOnly 
 
 ## Acceptance criteria
 
-- [ ] Passwords stored as hashes (bcrypt or argon2id), never plaintext
-- [ ] Session cookie is HttpOnly, SameSite=Lax, Secure in production
-- [ ] Admin procedures reject `customer` sessions with `FORBIDDEN`
-- [ ] `src/lib/authStore.ts` talks to the server instead of inventing users
-- [ ] Guest session id `lumina_session_id` is minted if missing (see roadmap §5.1)
+- [x] Passwords stored as hashes (bcrypt or argon2id), never plaintext
+- [x] Session cookie is HttpOnly, SameSite=Lax, Secure in production
+- [x] Admin procedures reject `customer` sessions with `FORBIDDEN`
+- [x] `src/lib/authStore.ts` talks to the server instead of inventing users
+- [x] Guest session id `lumina_session_id` is minted if missing (see roadmap §5.1)
 
 ## Implementation notes
 
