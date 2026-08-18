@@ -12,10 +12,10 @@
 
 ## Acceptance criteria
 
-- [ ] Product PDP at `/product/lumina-glow-serum` renders DB data
-- [ ] Shop section can list seeded products
-- [ ] Cursor pagination on `getProducts`
-- [ ] Inactive products are hidden from the storefront
+- [x] Product PDP at `/product/lumina-glow-serum` renders DB data
+- [x] Shop section can list seeded products
+- [x] Cursor pagination on `getProducts`
+- [x] Inactive products are hidden from the storefront
 
 ## Implementation notes
 

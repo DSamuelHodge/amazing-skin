@@ -71,6 +71,21 @@ export const trpc = {
       },
     },
   },
+  catalog: {
+    getProducts: {
+      useQuery: (input?: {
+        categorySlug?: string;
+        search?: string;
+        limit?: number;
+        cursor?: string;
+      }) => {
+        return useQuery({
+          queryKey: ['catalog', 'products', input],
+          queryFn: () => trpcClient.catalog.getProducts.query(input),
+        });
+      },
+    },
+  },
   account: {
     wishlistAdd: {
       useMutation: () => {
