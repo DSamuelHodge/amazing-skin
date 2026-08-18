@@ -84,7 +84,7 @@ export default function ProductDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="bg-[#f4eadf] text-stone-900 min-h-screen w-full">
+      <div className="bg-canvas-bg text-stone-900 min-h-screen w-full">
         <div className="container mx-auto px-4 py-8 max-w-7xl animate-pulse">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="flex flex-col gap-4">
@@ -109,7 +109,7 @@ export default function ProductDetailPage() {
 
   if (isError || !product) {
     return (
-      <div className="bg-[#f4eadf] text-stone-900 min-h-screen w-full">
+      <div className="bg-canvas-bg text-stone-900 min-h-screen w-full">
         <div className="container mx-auto px-4 py-24 max-w-7xl flex flex-col items-center justify-center text-center">
           <h1 className="text-3xl font-serif mb-4">Product not found</h1>
           <p className="text-muted-foreground mb-8">The product you are looking for does not exist or has been removed.</p>
@@ -164,7 +164,7 @@ export default function ProductDetailPage() {
   }, {});
 
   return (
-    <div className="bg-[#f4eadf] text-stone-900 min-h-screen w-full">
+    <div className="bg-canvas-bg text-stone-900 min-h-screen w-full">
       <div className="container mx-auto px-4 py-8 lg:py-12 max-w-7xl">
         {/* Breadcrumbs could go here */}
       

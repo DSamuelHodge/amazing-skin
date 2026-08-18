@@ -186,7 +186,7 @@ export default function CheckoutPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#faf7f2]">
+      <div className="min-h-screen flex items-center justify-center bg-canvas-bg">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 border-2 border-emerald-800 border-t-transparent rounded-full animate-spin" />
           <p className="text-xs font-serif text-stone-600 tracking-wider">Preparing Lumina Sanctuary Checkout...</p>
@@ -197,7 +197,7 @@ export default function CheckoutPage() {
 
   if (items.length === 0 && !createOrderMutation.isSuccess) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-[#faf7f2] p-6 text-center">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-canvas-bg p-6 text-center">
         <div className="max-w-md bg-white rounded-3xl p-8 sm:p-10 border border-stone-200/90 shadow-sm space-y-4">
           <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-800 flex items-center justify-center mx-auto">
             <Sparkles className="w-8 h-8 text-emerald-700" />
@@ -209,7 +209,7 @@ export default function CheckoutPage() {
           <div className="pt-2">
             <button
               onClick={() => window.location.href = '/'}
-              className="w-full py-3.5 bg-[#15281e] hover:bg-[#1e392b] text-white text-xs font-medium rounded-xl transition-colors shadow-sm"
+              className="w-full py-3.5 bg-brand-primary hover:bg-forest-elevated text-white text-xs font-medium rounded-xl transition-colors shadow-sm"
             >
               Explore Formulations & Rituals
             </button>
@@ -220,7 +220,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf7f2] py-8 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans">
+    <div className="min-h-screen bg-canvas-bg py-8 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans">
       {/* Header bar on checkout */}
       <div className="max-w-6xl mx-auto mb-8 flex items-center justify-between">
         <a 

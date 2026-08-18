@@ -128,7 +128,7 @@ export function ShippingStep({ formData, setFormData, onContinue, pointsEarned }
   return (
     <div className="bg-white rounded-3xl p-6 sm:p-9 shadow-sm border border-stone-200/90 text-stone-900">
       {/* Express Checkout Accelerated Bar */}
-      <div className="mb-8 p-5 bg-[#faf7f2] border border-stone-200/80 rounded-2xl">
+      <div className="mb-8 p-5 bg-canvas-surface border border-stone-200/80 rounded-2xl">
         <div className="flex items-center justify-between mb-3">
           <span className="text-xs font-bold uppercase tracking-wider text-stone-600 flex items-center gap-1.5">
             <Zap className="w-3.5 h-3.5 text-amber-600" />
@@ -169,7 +169,7 @@ export function ShippingStep({ formData, setFormData, onContinue, pointsEarned }
             <div className="w-full border-t border-stone-200" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-[#faf7f2] px-3 text-stone-400 font-semibold tracking-wider text-[10px]">
+            <span className="bg-canvas-surface px-3 text-stone-400 font-semibold tracking-wider text-[10px]">
               Or continue with Lumina sanctuary delivery
             </span>
           </div>
@@ -518,7 +518,7 @@ export function ShippingStep({ formData, setFormData, onContinue, pointsEarned }
         <div className="pt-4">
           <button
             type="submit"
-            className="w-full py-4 px-6 bg-[#15281e] hover:bg-[#1e392b] text-white font-medium rounded-2xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base group"
+            className="w-full py-4 px-6 bg-brand-primary hover:bg-forest-elevated text-white font-medium rounded-2xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base group"
           >
             <span>Continue to Ritual Review</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

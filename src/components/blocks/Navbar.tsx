@@ -10,7 +10,7 @@ export function Navbar() {
   const itemCount = cart?.items?.reduce((acc, item) => acc + item.quantity, 0) || 0;
 
   return (
-    <header className="border-b border-emerald-900/50 bg-[#1b2320]/90 backdrop-blur-sm sticky top-0 z-40">
+    <header className="border-b border-emerald-900/50 bg-forest-bg/90 backdrop-blur-sm sticky top-0 z-40">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
         <a 
           href="/"

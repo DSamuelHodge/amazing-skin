@@ -12,8 +12,8 @@ function Badge({ className, variant = "emerald", ...props }: BadgeProps) {
     emerald: "bg-emerald-900/60 text-emerald-100",
     stone: "bg-white/70 text-stone-700 border border-stone-300",
     amber: "bg-amber-100/70 text-amber-800 border border-amber-300",
-    dark: "bg-stone-900 text-[#f4eadf]",
-    outline: "bg-stone-900/90 text-[#f4eadf] border border-stone-200/80",
+    dark: "bg-stone-900 text-forest-text",
+    outline: "bg-stone-900/90 text-forest-text border border-stone-200/80",
   };
 
   return (

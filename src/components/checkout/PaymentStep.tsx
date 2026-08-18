@@ -240,7 +240,7 @@ export function PaymentStep({
         {paymentMethod === 'card' && (
           <div className="space-y-6">
             {/* Interactive Luxury Card Canvas Preview */}
-            <div className="relative w-full max-w-md mx-auto aspect-[1.586] rounded-3xl p-6 sm:p-7 text-white shadow-xl overflow-hidden bg-gradient-to-tr from-[#12221a] via-[#1c3529] to-[#0a120e] border border-emerald-700/40">
+            <div className={`relative w-full max-w-md mx-auto aspect-[1.586] rounded-3xl p-6 sm:p-7 text-white shadow-xl overflow-hidden bg-gradient-to-tr ${cardBrandInfo.color} border border-emerald-700/40`}>
               {/* Subtle botanical glow background */}
               <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-36 h-36 bg-amber-500/10 rounded-full blur-xl pointer-events-none" />
@@ -381,7 +381,7 @@ export function PaymentStep({
 
         {/* METHOD 2: DIGITAL WALLET */}
         {paymentMethod === 'express' && (
-          <div className="p-6 rounded-2xl bg-[#faf7f2] border border-stone-200/80 text-center space-y-4">
+          <div className="p-6 rounded-2xl bg-canvas-surface border border-stone-200/80 text-center space-y-4">
             <div className="w-14 h-14 rounded-full bg-black text-white flex items-center justify-center mx-auto shadow-md">
               <Zap className="w-6 h-6 text-amber-400" />
             </div>
@@ -474,7 +474,7 @@ export function PaymentStep({
           <button
             type="submit"
             disabled={isProcessing}
-            className="w-full sm:w-auto px-10 py-4 bg-[#15281e] hover:bg-[#1e392b] text-white font-medium rounded-2xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base group disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full sm:w-auto px-10 py-4 bg-brand-primary hover:bg-forest-elevated text-white font-medium rounded-2xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base group disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Lock className="w-4 h-4 text-emerald-300" />
             <span>

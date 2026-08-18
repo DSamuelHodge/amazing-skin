@@ -7,7 +7,7 @@ export function ShopSection() {
   const { shop } = mockData;
 
   return (
-    <section className="text-stone-900 bg-[#f4eadf] w-full border-stone-200/80 border-t">
+    <section className="text-stone-900 bg-canvas-bg w-full border-stone-200/80 border-t">
       <div className="sm:px-6 lg:px-8 lg:py-20 max-w-6xl mx-auto pt-14 px-4 pb-14">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
           <motion.div 
@@ -69,7 +69,7 @@ export function ShopSection() {
               {shop.newArrivals.map((product, i) => (
                 <motion.article 
                   key={i}
-                  className="group rounded-3xl border border-stone-200 bg-[#f7efe4] overflow-hidden flex flex-col shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200"
+                  className="group rounded-3xl border border-stone-200 bg-canvas-surface overflow-hidden flex flex-col shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -81,7 +81,7 @@ export function ShopSection() {
                       <img src={product.image} alt={product.title} className="sm:h-56 w-full h-48 object-cover" />
                     </a>
                     <div className="absolute top-3 left-3">
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[0.68rem] font-medium bg-stone-900 text-[#f4eadf] shadow-sm">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[0.68rem] font-medium bg-stone-900 text-forest-text shadow-sm">
                         {product.tag}
                       </span>
                     </div>
@@ -141,7 +141,7 @@ export function ShopSection() {
               {shop.topProducts.map((product, i) => (
                 <motion.article 
                   key={i}
-                  className="group rounded-3xl border border-stone-200 bg-[#f7efe4] px-5 py-5 sm:px-6 sm:py-6 flex flex-col shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200"
+                  className="group rounded-3xl border border-stone-200 bg-canvas-surface px-5 py-5 sm:px-6 sm:py-6 flex flex-col shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}

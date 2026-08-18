@@ -7,7 +7,7 @@ export function CtaSection() {
   const { cta } = mockData;
 
   return (
-    <section className="text-emerald-50 bg-[#0b0f0e] w-full border-t border-emerald-900/60">
+    <section className="text-emerald-50 bg-forest-bg w-full border-t border-emerald-900/60">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
         <div className="flex flex-col lg:flex-row items-center lg:items-stretch gap-10">
           <motion.div 
@@ -57,7 +57,7 @@ export function CtaSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <div className="relative rounded-3xl border border-emerald-900/70 bg-gradient-to-br from-[#111715] via-[#0c1411] to-[#102019] overflow-hidden shadow-sm">
+            <div className="relative rounded-3xl border border-emerald-900/70 bg-gradient-to-br from-forest-surface via-forest-bg to-forest-surface overflow-hidden shadow-sm">
               <div className="absolute -top-20 right-[-40px] w-56 h-56 bg-emerald-500/20 blur-3xl"></div>
               <div className="absolute -bottom-16 left-[-40px] w-52 h-52 bg-emerald-600/20 blur-3xl"></div>
 
@@ -108,7 +108,7 @@ export function CtaSection() {
                       {cta.sampleRitual.stats.avatars.map((avatar, i) => (
                         <img 
                           key={i} 
-                          className="w-7 h-7 rounded-full border border-[#0b0f0e] object-cover" 
+                          className="w-7 h-7 rounded-full border border-forest-bg object-cover" 
                           src={avatar} 
                           alt="Customer" 
                         />

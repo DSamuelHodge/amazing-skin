@@ -8,7 +8,7 @@ export function EveningRitualSection() {
   const { eveningRitual } = mockData;
 
   return (
-    <section className="text-stone-900 bg-[#f4eadf] w-full border-stone-200/80 border-t">
+    <section className="text-stone-900 bg-canvas-bg w-full border-stone-200/80 border-t">
       <div className="sm:px-6 lg:px-8 lg:py-20 max-w-6xl mx-auto pt-14 px-4 pb-14">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-12">
           <motion.div 
@@ -38,7 +38,7 @@ export function EveningRitualSection() {
           >
             {eveningRitual.steps.map((step, i) => (
               <div key={i} className="flex items-center gap-2">
-                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-stone-900 text-[0.7rem] font-semibold text-[#f4eadf]">
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-stone-900 text-[0.7rem] font-semibold text-forest-text">
                   {i + 1}
                 </span>
                 <span>{step.name}</span>
@@ -51,7 +51,7 @@ export function EveningRitualSection() {
           {eveningRitual.steps.map((step, i) => (
             <motion.article 
               key={i}
-              className="group rounded-3xl border border-stone-200 bg-[#f7efe4] px-5 py-6 sm:px-6 sm:py-7 flex flex-col justify-between shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200"
+              className="group rounded-3xl border border-stone-200 bg-canvas-surface px-5 py-6 sm:px-6 sm:py-7 flex flex-col justify-between shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -60,7 +60,7 @@ export function EveningRitualSection() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <div className="inline-flex items-center gap-2 text-xs font-medium text-stone-600">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-stone-900 text-[0.75rem] font-semibold text-[#f4eadf]">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-stone-900 text-[0.75rem] font-semibold text-forest-text">
                       {step.number}
                     </span>
                     <span className="tracking-[0.18em] uppercase">{step.name}</span>
@@ -104,7 +104,7 @@ export function EveningRitualSection() {
           transition={{ duration: 0.6 }}
         >
           <div className="w-full lg:w-1/2">
-            <div className="relative overflow-hidden rounded-3xl border border-stone-200 bg-[#f7efe4]">
+            <div className="relative overflow-hidden rounded-3xl border border-stone-200 bg-canvas-surface">
               <div className="absolute inset-0 bg-gradient-to-tr from-stone-900/5 via-transparent to-amber-200/40 pointer-events-none"></div>
               <img src={eveningRitual.highlight.image} alt="Soft evening self-care moment" className="sm:h-72 lg:h-80 w-full h-64 object-cover" />
             </div>
