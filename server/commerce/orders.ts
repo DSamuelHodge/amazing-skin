@@ -14,6 +14,7 @@ import { clearCart, getOrCreateCart } from '../trpc/cart-db';
 import { demoPaymentIntentId, getStripe, getStripeMode, isDemoPaymentIntentId } from '../../lib/stripe';
 import { fromMoney, toCents, toMoney } from './money';
 import { calculatePricing } from './pricing';
+import { queueOrderConfirmation } from './email';
 
 export const RESERVATION_MS = 15 * 60 * 1000;
 
@@ -169,7 +170,8 @@ export async function releaseOrderReservation(orderId: string, note: string) {
 
 export async function fulfillOrder(opts: { orderId?: string; paymentIntentId?: string }) {
   const db = await getDb();
-  return db.transaction(async (tx) => {
+  let newlyCaptured = false;
+  const captured = await db.transaction(async (tx) => {
     const [order] = opts.orderId
       ? await tx.select().from(orders).where(eq(orders.id, opts.orderId))
       : await tx.select().from(orders).where(eq(orders.stripePaymentIntentId, opts.paymentIntentId!));
@@ -218,8 +220,14 @@ export async function fulfillOrder(opts: { orderId?: string; paymentIntentId?: s
       .where(eq(orders.id, order.id))
       .returning();
 
+    newlyCaptured = true;
     return updated ?? order;
   });
+
+  if (newlyCaptured) {
+    queueOrderConfirmation(captured.id);
+  }
+  return captured;
 }
 
 export async function restockOnRefund(orderId: string, adminUserId: string | null, note: string) {
