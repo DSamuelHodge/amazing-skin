@@ -8,7 +8,7 @@ on:
 
 jobs:
   check:
-    name: Lint and build
+    name: Lint, migrate, build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,4 +18,37 @@ jobs:
           cache: npm
       - run: npm ci --legacy-peer-deps
       - run: npm run lint
+      - name: Migration dry-run (PGLite)
+        run: npm run db:migrate
       - run: npm run build
+
+  e2e:
+    name: Checkout e2e
+    runs-on: ubuntu-latest
+    needs: check
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - run: npm run db:migrate
+      - run: npm run db:seed
+      - run: npx --yes playwright@1.55.0 install --with-deps chromium
+      - name: Dev server
+        run: |
+          npm run dev > /tmp/lumina-dev.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -sf http://127.0.0.1:8080/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          echo "dev server failed"; cat /tmp/lumina-dev.log; exit 1
+      - name: E2E
+        env:
+          BASE_URL: http://127.0.0.1:8080
+          NODE_PATH: ${{ github.workspace }}/node_modules
+        run: |
+          npm install --no-save --legacy-peer-deps playwright@1.55.0
+          npm run test:e2e
