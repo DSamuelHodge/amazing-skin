@@ -12,6 +12,7 @@ import {
   Sparkle
 } from 'lucide-react';
 import { useAuthStore } from '@/src/lib/authStore';
+import { navigate } from '@/src/lib/nav';
 import { toast } from 'sonner';
 
 export function CustomerMenu() {
@@ -122,7 +123,7 @@ export function CustomerMenu() {
               <button
                 onClick={() => {
                   setIsOpen(false);
-                  toast.info('Orders & Rituals: 1 Active Order (ORD-88219)');
+                  navigate('/account#orders');
                 }}
                 className="w-full px-4 py-2 text-left text-stone-700 hover:bg-stone-100 flex items-center gap-2.5 transition-colors"
               >
@@ -133,7 +134,7 @@ export function CustomerMenu() {
               <button
                 onClick={() => {
                   setIsOpen(false);
-                  toast.info(`Skin Profile: ${user.primarySkinType || 'Sensitive'}`);
+                  navigate('/account#skin');
                 }}
                 className="w-full px-4 py-2 text-left text-stone-700 hover:bg-stone-100 flex items-center gap-2.5 transition-colors"
               >

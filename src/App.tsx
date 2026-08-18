@@ -16,6 +16,7 @@ import ProductDetailPage from "@/src/routes/product/$slug";
 import { CartDrawer } from "@/src/components/cart-drawer";
 import CheckoutPage from "@/src/routes/checkout";
 import OrderConfirmedPage from "@/src/routes/order-confirmed";
+import AccountPage from "@/src/routes/account";
 import { AuthModal } from "@/src/components/auth/AuthModal";
 import { AdminDashboardModal } from "@/src/components/admin/AdminDashboardModal";
 import { Toaster } from "sonner";
@@ -64,6 +65,7 @@ export default function App() {
   const isProductPage = currentPath.startsWith('/product/');
   const isCheckoutPage = currentPath === '/checkout';
   const isOrderConfirmedPage = currentPath.startsWith('/order-confirmed');
+  const isAccountPage = currentPath.startsWith('/account');
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -76,6 +78,8 @@ export default function App() {
             <CheckoutPage />
           ) : isOrderConfirmedPage ? (
             <OrderConfirmedPage />
+          ) : isAccountPage ? (
+            <AccountPage />
           ) : (
             <>
               <HeroSection />

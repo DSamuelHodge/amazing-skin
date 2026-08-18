@@ -12,7 +12,7 @@
 
 ## Acceptance criteria
 
-- [ ] Signed-in users see their orders from the DB
-- [ ] Address book CRUD with default shipping/billing flags
-- [ ] Skin type + concerns persist on `customer_profiles`
-- [ ] Wishlist toggle is unique per (user, product)
+- [x] Signed-in users see their orders from the DB
+- [x] Address book CRUD with default shipping/billing flags
+- [x] Skin type + concerns persist on `customer_profiles`
+- [x] Wishlist toggle is unique per (user, product)
