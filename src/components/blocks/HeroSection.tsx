@@ -56,7 +56,7 @@ export function HeroSection() {
               {hero.rating.avatars.map((avatar, i) => (
                 <img 
                   key={i} 
-                  className="w-7 h-7 object-cover border-[#1b2320] border rounded-full" 
+                  className="w-7 h-7 object-cover border-forest-bg border rounded-full" 
                   src={avatar} 
                   alt={`Customer ${i + 1}`} 
                 />
@@ -68,7 +68,7 @@ export function HeroSection() {
 
       <div className="grid gap-6 lg:gap-7 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1.1fr)] items-center">
         <motion.article 
-          className="overflow-hidden bg-[#111715] rounded-3xl relative shadow-sm border border-emerald-900/60"
+          className="overflow-hidden bg-forest-surface rounded-3xl relative shadow-sm border border-emerald-900/60"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8 }}
@@ -79,7 +79,7 @@ export function HeroSection() {
             className="w-full h-[680px] object-cover" 
           />
           <div className="absolute bottom-5 left-5 sm:bottom-6 sm:left-6">
-            <div className="bg-[#1f2924]/95 backdrop-blur-sm rounded-2xl px-4 py-3 sm:px-5 sm:py-4 shadow-md max-w-xs border border-emerald-900/70">
+            <div className="bg-forest-elevated/95 backdrop-blur-sm rounded-2xl px-4 py-3 sm:px-5 sm:py-4 shadow-md max-w-xs border border-emerald-900/70">
               <div className="flex items-start gap-3">
                 <div className="flex flex-none text-emerald-200 bg-emerald-900/50 w-9 h-9 rounded-full items-center justify-center">
                   <Sparkles className="w-4 h-4" />
@@ -96,7 +96,7 @@ export function HeroSection() {
 
         <div className="flex flex-col gap-6 lg:gap-7 h-full">
           <motion.article 
-            className="sm:p-6 lg:p-7 flex flex-col sm:flex-row gap-6 bg-[#232e29] border-emerald-900/70 border rounded-3xl p-5 items-stretch justify-between"
+            className="sm:p-6 lg:p-7 flex flex-col sm:flex-row gap-6 bg-forest-elevated border-emerald-900/70 border rounded-3xl p-5 items-stretch justify-between"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -135,7 +135,7 @@ export function HeroSection() {
           </motion.article>
 
           <motion.article 
-            className="bg-[#2f3b30] rounded-3xl px-5 py-6 sm:px-7 sm:py-7 lg:px-8 lg:py-8 text-emerald-50 flex flex-col sm:flex-row gap-6 items-stretch overflow-hidden border border-emerald-900/70"
+            className="bg-forest-elevated rounded-3xl px-5 py-6 sm:px-7 sm:py-7 lg:px-8 lg:py-8 text-emerald-50 flex flex-col sm:flex-row gap-6 items-stretch overflow-hidden border border-emerald-900/70"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}

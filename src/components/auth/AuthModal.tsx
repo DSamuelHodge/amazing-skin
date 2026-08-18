@@ -128,7 +128,7 @@ export function AuthModal() {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={closeAuthModal}
-        className="fixed inset-0 bg-[#0d1410]/80 backdrop-blur-md transition-opacity"
+        className="fixed inset-0 bg-forest-bg/80 backdrop-blur-md transition-opacity"
       />
 
       {/* Modal Container */}
@@ -137,10 +137,10 @@ export function AuthModal() {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96, y: 12 }}
         transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-        className="relative w-full max-w-lg bg-[#faf7f3] text-stone-900 rounded-3xl shadow-2xl border border-stone-200/80 overflow-hidden z-10"
+        className="relative w-full max-w-lg bg-canvas-surface text-stone-900 rounded-3xl shadow-2xl border border-stone-200/80 overflow-hidden z-10"
       >
         {/* Top Header Banner */}
-        <div className="bg-[#15281e] text-emerald-50 px-6 pt-6 pb-5 relative">
+        <div className="bg-brand-primary text-emerald-50 px-6 pt-6 pb-5 relative">
           <button
             onClick={closeAuthModal}
             className="absolute top-5 right-5 p-2 rounded-full text-emerald-200/80 hover:text-white hover:bg-white/10 transition-colors"
@@ -166,7 +166,7 @@ export function AuthModal() {
           </p>
 
           {/* Portal Switcher (Customer vs Admin) */}
-          <div className="flex p-1 bg-[#0e1c15] rounded-xl mt-4 border border-emerald-950/60">
+          <div className="flex p-1 bg-forest-bg rounded-xl mt-4 border border-emerald-950/60">
             <button
               type="button"
               onClick={() => setActivePortal('customer')}
@@ -218,7 +218,7 @@ export function AuthModal() {
                   >
                     Sign In
                     {customerTab === 'signin' && (
-                      <motion.div layoutId="auth-tab-indicator" className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#15281e]" />
+                      <motion.div layoutId="auth-tab-indicator" className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-primary" />
                     )}
                   </button>
 
@@ -233,7 +233,7 @@ export function AuthModal() {
                   >
                     Create Account
                     {customerTab === 'signup' && (
-                      <motion.div layoutId="auth-tab-indicator" className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#15281e]" />
+                      <motion.div layoutId="auth-tab-indicator" className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-primary" />
                     )}
                   </button>
 
@@ -248,7 +248,7 @@ export function AuthModal() {
                   >
                     Passwordless Link
                     {customerTab === 'magic-link' && (
-                      <motion.div layoutId="auth-tab-indicator" className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#15281e]" />
+                      <motion.div layoutId="auth-tab-indicator" className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-primary" />
                     )}
                   </button>
                 </div>
@@ -332,7 +332,7 @@ export function AuthModal() {
                     <button
                       type="submit"
                       disabled={isLoading}
-                      className="w-full py-3 px-4 bg-[#15281e] hover:bg-[#1f3a2c] text-white font-medium rounded-xl transition-colors shadow-md flex items-center justify-center gap-2 mt-2"
+                      className="w-full py-3 px-4 bg-brand-primary hover:bg-forest-elevated text-white font-medium rounded-xl transition-colors shadow-md flex items-center justify-center gap-2 mt-2"
                     >
                       {isLoading ? 'Authenticating...' : 'Sign In to My Sanctuary'}
                       <ArrowRight className="w-4 h-4" />
@@ -407,7 +407,7 @@ export function AuthModal() {
                     <button
                       type="submit"
                       disabled={isLoading}
-                      className="w-full py-3 px-4 bg-[#15281e] hover:bg-[#1f3a2c] text-white font-medium rounded-xl transition-colors shadow-md flex items-center justify-center gap-2"
+                      className="w-full py-3 px-4 bg-brand-primary hover:bg-forest-elevated text-white font-medium rounded-xl transition-colors shadow-md flex items-center justify-center gap-2"
                     >
                       {isLoading ? 'Creating Account...' : 'Create Account & Claim 50 Points'}
                       <ArrowRight className="w-4 h-4" />
@@ -453,7 +453,7 @@ export function AuthModal() {
                         </div>
                         <button
                           type="submit"
-                          className="w-full py-3 px-4 bg-[#15281e] hover:bg-[#1f3a2c] text-white font-medium rounded-xl transition-colors shadow-md flex items-center justify-center gap-2"
+                          className="w-full py-3 px-4 bg-brand-primary hover:bg-forest-elevated text-white font-medium rounded-xl transition-colors shadow-md flex items-center justify-center gap-2"
                         >
                           Send Magic Link
                           <Mail className="w-4 h-4" />

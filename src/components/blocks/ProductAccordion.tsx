@@ -22,7 +22,7 @@ export const ProductAccordion = ({ product }: ProductAccordionProps) => {
             <div className="prose prose-sm max-w-none prose-p:mb-3" dangerouslySetInnerHTML={{ __html: product.description }} />
             
             {product.proTip && (
-              <div className="bg-[#F9F7F4] p-4 rounded-lg flex gap-3 items-start mt-4 border border-[#EAE5DF]">
+              <div className="bg-canvas-surface p-4 rounded-lg flex gap-3 items-start mt-4 border border-border-subtle">
                 <Lightbulb className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-medium text-foreground text-sm mb-1">Pro Tip</h4>

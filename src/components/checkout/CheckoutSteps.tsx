@@ -52,7 +52,7 @@ export function CheckoutSteps({ activeStep, completedSteps, onStepClick }: Check
                   isCompleted
                     ? 'bg-emerald-700 text-white border-emerald-700 group-hover:bg-emerald-800'
                     : isActive
-                      ? 'bg-[#15281e] text-emerald-300 border-emerald-600 ring-4 ring-emerald-900/10'
+                      ? 'bg-brand-primary text-emerald-300 border-emerald-600 ring-4 ring-emerald-900/10'
                       : 'bg-stone-50 text-stone-400 border-stone-300'
                 }`}
               >
