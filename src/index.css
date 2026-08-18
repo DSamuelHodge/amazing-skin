@@ -103,13 +103,45 @@ body {
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  /* Type scale + leadings — Tailwind v4 `--text-*` / `--text-*--line-height` */
+  --text-2xs: var(--type-2xs);
+  --text-2xs--line-height: var(--type-2xs-leading);
+  --text-xs: var(--type-xs);
+  --text-xs--line-height: var(--type-xs-leading);
+  --text-sm: var(--type-sm);
+  --text-sm--line-height: var(--type-sm-leading);
+  --text-base: var(--type-base);
+  --text-base--line-height: var(--type-base-leading);
+  --text-lg: var(--type-lg);
+  --text-lg--line-height: var(--type-lg-leading);
+  --text-xl: var(--type-xl);
+  --text-xl--line-height: var(--type-xl-leading);
+  --text-2xl: var(--type-2xl);
+  --text-2xl--line-height: var(--type-2xl-leading);
+  --text-3xl: var(--type-3xl);
+  --text-3xl--line-height: var(--type-3xl-leading);
+  --text-4xl: var(--type-4xl);
+  --text-4xl--line-height: var(--type-4xl-leading);
+  --text-5xl: var(--type-5xl);
+  --text-5xl--line-height: var(--type-5xl-leading);
+  /* Spatial grid — `--spacing-*` utilities (p-4, gap-8, …) */
+  --spacing-1: var(--space-1);
+  --spacing-2: var(--space-2);
+  --spacing-3: var(--space-3);
+  --spacing-4: var(--space-4);
+  --spacing-6: var(--space-6);
+  --spacing-8: var(--space-8);
+  --spacing-12: var(--space-12);
+  --spacing-16: var(--space-16);
+  --spacing-24: var(--space-24);
+  --radius-sm: var(--radii-sm);
+  --radius-md: var(--radii-md);
+  --radius-lg: var(--radii-lg);
+  --radius-xl: var(--radii-xl);
+  --radius-2xl: var(--radii-xl);
+  --radius-3xl: calc(var(--radii-xl) * 1.5);
+  --radius-4xl: calc(var(--radii-xl) * 2);
+  --radius-full: var(--radii-full);
 }
 
 /*
@@ -140,34 +172,44 @@ body {
   --brand-forest: var(--forest-bg);
 
   /* Typography scale — §2.2 (Major Second / Perfect Fourth) */
-  --text-2xs: 0.6875rem; /* 11px - line-height: 1.0rem */
-  --text-xs:  0.75rem;   /* 12px - line-height: 1.1rem */
-  --text-sm:  0.875rem;  /* 14px - line-height: 1.35rem */
-  --text-base: 1.000rem; /* 16px - line-height: 1.6rem (Baseline) */
-  --text-lg:  1.125rem;  /* 18px - line-height: 1.65rem */
-  --text-xl:  1.333rem;  /* 21.3px - line-height: 1.8rem */
-  --text-2xl: 1.777rem;  /* 28.4px - line-height: 2.2rem */
-  --text-3xl: 2.369rem;  /* 37.9px - line-height: 2.7rem */
-  --text-4xl: 3.157rem;  /* 50.5px - line-height: 3.4rem */
-  --text-5xl: 4.209rem;  /* 67.3px - line-height: 4.5rem */
+  --type-2xs: 0.6875rem;
+  --type-2xs-leading: 1rem;
+  --type-xs: 0.75rem;
+  --type-xs-leading: 1.1rem;
+  --type-sm: 0.875rem;
+  --type-sm-leading: 1.35rem;
+  --type-base: 1rem;
+  --type-base-leading: 1.6rem;
+  --type-lg: 1.125rem;
+  --type-lg-leading: 1.65rem;
+  --type-xl: 1.333rem;
+  --type-xl-leading: 1.8rem;
+  --type-2xl: 1.777rem;
+  --type-2xl-leading: 2.2rem;
+  --type-3xl: 2.369rem;
+  --type-3xl-leading: 2.7rem;
+  --type-4xl: 3.157rem;
+  --type-4xl-leading: 3.4rem;
+  --type-5xl: 4.209rem;
+  --type-5xl-leading: 4.5rem;
 
   /* Spatial grid (4px base) — §2.3 */
-  --space-1: 0.25rem;  /* 4px */
-  --space-2: 0.50rem;  /* 8px */
-  --space-3: 0.75rem;  /* 12px */
-  --space-4: 1.00rem;  /* 16px - standard container inner padding */
-  --space-6: 1.50rem;  /* 24px - card padding */
-  --space-8: 2.00rem;  /* 32px - section gap */
-  --space-12: 3.00rem; /* 48px - block separation */
-  --space-16: 4.00rem; /* 64px - hero padding */
-  --space-24: 6.00rem; /* 96px - major layout margins */
+  --space-1: 0.25rem;
+  --space-2: 0.50rem;
+  --space-3: 0.75rem;
+  --space-4: 1.00rem;
+  --space-6: 1.50rem;
+  --space-8: 2.00rem;
+  --space-12: 3.00rem;
+  --space-16: 4.00rem;
+  --space-24: 6.00rem;
 
   /* Radii with geometric nesting — §2.3 */
-  --radius-sm: 0.375rem; /* 6px - inner buttons, tags */
-  --radius-md: 0.500rem; /* 8px - form inputs, dropdowns */
-  --radius-lg: 0.750rem; /* 12px - cards, modals */
-  --radius-xl: 1.000rem; /* 16px - primary product cards */
-  --radius-full: 9999px; /* pills, circular actions */
+  --radii-sm: 0.375rem;
+  --radii-md: 0.500rem;
+  --radii-lg: 0.750rem;
+  --radii-xl: 1.000rem;
+  --radii-full: 9999px;
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -227,16 +269,26 @@ body {
   --forest-border: oklch(0.30 0.030 155);
   --brand-forest: var(--forest-bg);
 
-  --text-2xs: 0.6875rem;
-  --text-xs:  0.75rem;
-  --text-sm:  0.875rem;
-  --text-base: 1.000rem;
-  --text-lg:  1.125rem;
-  --text-xl:  1.333rem;
-  --text-2xl: 1.777rem;
-  --text-3xl: 2.369rem;
-  --text-4xl: 3.157rem;
-  --text-5xl: 4.209rem;
+  --type-2xs: 0.6875rem;
+  --type-2xs-leading: 1rem;
+  --type-xs: 0.75rem;
+  --type-xs-leading: 1.1rem;
+  --type-sm: 0.875rem;
+  --type-sm-leading: 1.35rem;
+  --type-base: 1rem;
+  --type-base-leading: 1.6rem;
+  --type-lg: 1.125rem;
+  --type-lg-leading: 1.65rem;
+  --type-xl: 1.333rem;
+  --type-xl-leading: 1.8rem;
+  --type-2xl: 1.777rem;
+  --type-2xl-leading: 2.2rem;
+  --type-3xl: 2.369rem;
+  --type-3xl-leading: 2.7rem;
+  --type-4xl: 3.157rem;
+  --type-4xl-leading: 3.4rem;
+  --type-5xl: 4.209rem;
+  --type-5xl-leading: 4.5rem;
 
   --space-1: 0.25rem;
   --space-2: 0.50rem;
@@ -248,11 +300,11 @@ body {
   --space-16: 4.00rem;
   --space-24: 6.00rem;
 
-  --radius-sm: 0.375rem;
-  --radius-md: 0.500rem;
-  --radius-lg: 0.750rem;
-  --radius-xl: 1.000rem;
-  --radius-full: 9999px;
+  --radii-sm: 0.375rem;
+  --radii-md: 0.500rem;
+  --radii-lg: 0.750rem;
+  --radii-xl: 1.000rem;
+  --radii-full: 9999px;
 
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
