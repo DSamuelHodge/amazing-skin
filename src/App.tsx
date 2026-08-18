@@ -17,8 +17,8 @@ import { CartDrawer } from "@/src/components/cart-drawer";
 import CheckoutPage from "@/src/routes/checkout";
 import OrderConfirmedPage from "@/src/routes/order-confirmed";
 import AccountPage from "@/src/routes/account";
+import AdminPage from "@/src/routes/admin";
 import { AuthModal } from "@/src/components/auth/AuthModal";
-import { AdminDashboardModal } from "@/src/components/admin/AdminDashboardModal";
 import { Toaster } from "sonner";
 import { useAuthStore } from "@/src/lib/authStore";
 import { navigate } from "@/src/lib/nav";
@@ -66,13 +66,16 @@ export default function App() {
   const isCheckoutPage = currentPath === '/checkout';
   const isOrderConfirmedPage = currentPath.startsWith('/order-confirmed');
   const isAccountPage = currentPath.startsWith('/account');
+  const isAdminPage = currentPath.startsWith('/admin');
 
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen flex flex-col w-full overflow-x-hidden">
-        <Navbar />
+        {!isAdminPage && <Navbar />}
         <main className="flex-1 w-full">
-          {isProductPage ? (
+          {isAdminPage ? (
+            <AdminPage />
+          ) : isProductPage ? (
             <ProductDetailPage key={currentPath} />
           ) : isCheckoutPage ? (
             <CheckoutPage />
@@ -90,10 +93,9 @@ export default function App() {
             </>
           )}
         </main>
-        <Footer />
-        <CartDrawer />
+        {!isAdminPage && <Footer />}
+        {!isAdminPage && <CartDrawer />}
         <AuthModal />
-        <AdminDashboardModal />
         <Toaster position="bottom-right" richColors />
       </div>
     </QueryClientProvider>

@@ -16,7 +16,7 @@ import { navigate } from '@/src/lib/nav';
 import { toast } from 'sonner';
 
 export function CustomerMenu() {
-  const { user, isAuthenticated, openAuthModal, signOut, openAdminDashboard } = useAuthStore();
+  const { user, isAuthenticated, openAuthModal, signOut } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -111,7 +111,7 @@ export function CustomerMenu() {
                 <button
                   onClick={() => {
                     setIsOpen(false);
-                    openAdminDashboard();
+                    navigate('/admin');
                   }}
                   className="w-full px-4 py-2.5 text-left font-medium text-emerald-900 hover:bg-emerald-50 flex items-center gap-2.5 transition-colors bg-emerald-50/40"
                 >
