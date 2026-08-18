@@ -2,8 +2,6 @@
 
 Issues derived from [`PRODUCTION_ROADMAP.md`](../../PRODUCTION_ROADMAP.md). Each task is sized for **one GitHub pull request**.
 
-GitHub Issues API is currently read-only for this workspace token, so the canonical copies live here. When write access is restored, run:
-
 ```bash
 ./scripts/publish-issues.sh
 ```
@@ -22,13 +20,14 @@ That script creates labels, opens one issue per file in this folder, and prints 
 ## Dependency graph
 
 ```
-P1-00 github-workflow          (this PR — templates, CI, backlog)
+P1-00 github-workflow
    │
    ├── P1-01 design-tokens     ── concurrent with P1-02
    ├── P1-02 db-foundation     ── concurrent with P1-01
    │       └── P1-03 catalog-seed
    │
    └── P2-01 trpc-server
+           ├── P2-05 graphql-crud   ── needs P1-02 (Drizzle schema + client)
            ├── P2-02 auth-rbac
            ├── P2-03 catalog-api      ── needs P1-03
            └── P2-04 cart-merge       ── needs P2-02
@@ -43,8 +42,6 @@ P1-00 github-workflow          (this PR — templates, CI, backlog)
                                                    └── P5-03 ci-cd-deploy
 ```
 
-**Concurrent now:** P1-01 (tokens) and P1-02 (db client/migrations) do not share files.
-
 ## Task index
 
 | ID | Phase | Priority | Title | Branch |
@@ -57,6 +54,7 @@ P1-00 github-workflow          (this PR — templates, CI, backlog)
 | [P2-02](P2-02-auth-rbac.md) | 2 | critical | Session auth and RBAC | `feat/auth-rbac` |
 | [P2-03](P2-03-catalog-api.md) | 2 | critical | Catalog routers on Postgres | `feat/catalog-api` |
 | [P2-04](P2-04-cart-merge.md) | 2 | high | Server cart + guest merge | `feat/cart-merge` |
+| [P2-05](P2-05-graphql-crud.md) | 2 | high | GraphQL CRUD from Drizzle schema | `feat/graphql-crud` |
 | [P3-01](P3-01-stripe-element.md) | 3 | critical | Stripe Payment Element | `feat/stripe-element` |
 | [P3-02](P3-02-stripe-webhooks.md) | 3 | critical | Webhooks + inventory lock | `feat/stripe-webhooks` |
 | [P3-03](P3-03-order-emails.md) | 3 | high | Order confirmation email | `feat/order-emails` |
