@@ -240,7 +240,7 @@ export function PaymentStep({
         {paymentMethod === 'card' && (
           <div className="space-y-6">
             {/* Interactive Luxury Card Canvas Preview */}
-            <div className="relative w-full max-w-md mx-auto aspect-[1.586] rounded-3xl p-6 sm:p-7 text-white shadow-xl overflow-hidden bg-gradient-to-tr from-forest-surface via-forest-elevated to-forest-bg border border-emerald-700/40">
+            <div className={`relative w-full max-w-md mx-auto aspect-[1.586] rounded-3xl p-6 sm:p-7 text-white shadow-xl overflow-hidden bg-gradient-to-tr ${cardBrandInfo.color} border border-emerald-700/40`}>
               {/* Subtle botanical glow background */}
               <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-36 h-36 bg-amber-500/10 rounded-full blur-xl pointer-events-none" />
