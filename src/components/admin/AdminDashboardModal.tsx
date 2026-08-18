@@ -84,7 +84,7 @@ export function AdminDashboardModal() {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={closeAdminDashboard}
-        className="fixed inset-0 bg-[#0a120e]/85 backdrop-blur-md"
+        className="fixed inset-0 bg-forest-bg/85 backdrop-blur-md"
       />
 
       {/* Main Admin Console Frame */}
@@ -93,10 +93,10 @@ export function AdminDashboardModal() {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.98, y: 15 }}
         transition={{ duration: 0.2 }}
-        className="relative w-full max-w-5xl bg-[#f7f5f0] text-stone-900 rounded-3xl shadow-2xl border border-stone-300/80 overflow-hidden z-10 flex flex-col max-h-[90vh]"
+        className="relative w-full max-w-5xl bg-canvas-bg text-stone-900 rounded-3xl shadow-2xl border border-stone-300/80 overflow-hidden z-10 flex flex-col max-h-[90vh]"
       >
         {/* Top Operations Header */}
-        <div className="bg-[#12221a] text-emerald-50 px-6 py-5 border-b border-emerald-900/50 flex flex-wrap items-center justify-between gap-4 shrink-0">
+        <div className="bg-forest-surface text-emerald-50 px-6 py-5 border-b border-emerald-900/50 flex flex-wrap items-center justify-between gap-4 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-emerald-800/80 border border-emerald-600/40 flex items-center justify-center text-emerald-300">
               <ShieldCheck className="w-5 h-5" />
@@ -149,7 +149,7 @@ export function AdminDashboardModal() {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap ${
                   isActive 
-                    ? 'bg-[#15281e] text-white shadow-sm' 
+                    ? 'bg-brand-primary text-white shadow-sm' 
                     : 'text-stone-600 hover:bg-stone-100 hover:text-stone-900'
                 }`}
               >
@@ -207,7 +207,7 @@ export function AdminDashboardModal() {
               </div>
 
               {/* Quick Actions & High Priority Notice */}
-              <div className="bg-[#15281e] text-emerald-50 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="bg-brand-primary text-emerald-50 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div>
                   <h3 className="font-serif text-lg font-medium text-white">Automated Evening Ritual Restock Scheduled</h3>
                   <p className="text-xs text-emerald-200/80 mt-1">

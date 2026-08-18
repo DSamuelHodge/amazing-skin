@@ -253,7 +253,7 @@ export function OrderSummary({
       </div>
 
       {/* Carbon Offset Guarantee */}
-      <div className="p-3.5 rounded-2xl bg-[#faf7f2] border border-stone-200/80 space-y-2 text-xs">
+      <div className="p-3.5 rounded-2xl bg-canvas-surface border border-stone-200/80 space-y-2 text-xs">
         <label className="flex items-center gap-2 cursor-pointer">
           <input
             type="checkbox"

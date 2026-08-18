@@ -57,7 +57,7 @@ export const PurchaseBlock = ({
       
       {/* A. Header */}
       <div className="flex flex-col gap-3">
-        <span className="text-[10px] uppercase tracking-widest text-[#8C7A6B] font-semibold">
+        <span className="text-[10px] uppercase tracking-widest text-text-muted font-semibold">
           {product.primaryCategory}
         </span>
         <h1 className="text-3xl lg:text-4xl font-serif text-foreground leading-tight">

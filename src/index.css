@@ -13,7 +13,7 @@
 
 @layer base {
   a, button {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1b2320] rounded-sm;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-forest-bg rounded-sm;
   }
   * {
     @apply border-border outline-ring/50;
@@ -45,18 +45,33 @@
 }
 
 body {
-  @apply antialiased bg-[#1b2320] text-emerald-50 font-sans;
+  @apply antialiased bg-forest-bg text-forest-text font-sans;
 }
 
 @theme inline {
   --font-heading: var(--font-playfair);
   --font-sans: 'Geist Variable', sans-serif;
+
+  /* Organic Luxury — cream (shop / ritual / checkout / auth) */
   --color-canvas-bg: var(--canvas-bg);
   --color-canvas-surface: var(--canvas-surface);
   --color-canvas-elevated: var(--canvas-elevated);
+  --color-text-primary: var(--text-primary);
+  --color-text-muted: var(--text-muted);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
   --color-brand-primary: var(--brand-primary);
   --color-brand-accent: var(--brand-accent);
   --color-brand-forest: var(--brand-forest);
+
+  /* Organic Luxury — night forest (nav / hero / stats / cta / footer) */
+  --color-forest-bg: var(--forest-bg);
+  --color-forest-surface: var(--forest-surface);
+  --color-forest-elevated: var(--forest-elevated);
+  --color-forest-text: var(--forest-text);
+  --color-forest-muted: var(--forest-muted);
+  --color-forest-border: var(--forest-border);
+
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -97,13 +112,63 @@ body {
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/*
+ * Mixed-theme token system (roadmap §2).
+ * Cream + night-forest are BOTH first-class on :root so the landing page
+ * can compose dark chrome and light shop surfaces without .dark on <html>.
+ * Exact OKLCH values from PRODUCTION_ROADMAP.md §2.1.
+ */
 :root {
+  /* Light (cream) — shop, ritual, checkout, auth sheet */
   --canvas-bg: oklch(0.96 0.015 85);
   --canvas-surface: oklch(0.99 0.005 85);
   --canvas-elevated: oklch(1.00 0.000 0);
+  --text-primary: oklch(0.20 0.020 60);
+  --text-muted: oklch(0.50 0.020 60);
+  --border-subtle: oklch(0.88 0.015 85);
+  --border-strong: oklch(0.75 0.020 85);
   --brand-primary: oklch(0.25 0.045 155);
   --brand-accent: oklch(0.72 0.110 155);
-  --brand-forest: oklch(0.18 0.025 155);
+
+  /* Dark forest — nav, hero, stats, cta, footer */
+  --forest-bg: oklch(0.18 0.025 155);
+  --forest-surface: oklch(0.22 0.030 155);
+  --forest-elevated: oklch(0.26 0.035 155);
+  --forest-text: oklch(0.96 0.010 85);
+  --forest-muted: oklch(0.70 0.025 155);
+  --forest-border: oklch(0.30 0.030 155);
+  --brand-forest: var(--forest-bg);
+
+  /* Typography scale — §2.2 (Major Second / Perfect Fourth) */
+  --text-2xs: 0.6875rem; /* 11px - line-height: 1.0rem */
+  --text-xs:  0.75rem;   /* 12px - line-height: 1.1rem */
+  --text-sm:  0.875rem;  /* 14px - line-height: 1.35rem */
+  --text-base: 1.000rem; /* 16px - line-height: 1.6rem (Baseline) */
+  --text-lg:  1.125rem;  /* 18px - line-height: 1.65rem */
+  --text-xl:  1.333rem;  /* 21.3px - line-height: 1.8rem */
+  --text-2xl: 1.777rem;  /* 28.4px - line-height: 2.2rem */
+  --text-3xl: 2.369rem;  /* 37.9px - line-height: 2.7rem */
+  --text-4xl: 3.157rem;  /* 50.5px - line-height: 3.4rem */
+  --text-5xl: 4.209rem;  /* 67.3px - line-height: 4.5rem */
+
+  /* Spatial grid (4px base) — §2.3 */
+  --space-1: 0.25rem;  /* 4px */
+  --space-2: 0.50rem;  /* 8px */
+  --space-3: 0.75rem;  /* 12px */
+  --space-4: 1.00rem;  /* 16px - standard container inner padding */
+  --space-6: 1.50rem;  /* 24px - card padding */
+  --space-8: 2.00rem;  /* 32px - section gap */
+  --space-12: 3.00rem; /* 48px - block separation */
+  --space-16: 4.00rem; /* 64px - hero padding */
+  --space-24: 6.00rem; /* 96px - major layout margins */
+
+  /* Radii with geometric nesting — §2.3 */
+  --radius-sm: 0.375rem; /* 6px - inner buttons, tags */
+  --radius-md: 0.500rem; /* 8px - form inputs, dropdowns */
+  --radius-lg: 0.750rem; /* 12px - cards, modals */
+  --radius-xl: 1.000rem; /* 16px - primary product cards */
+  --radius-full: 9999px; /* pills, circular actions */
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -138,13 +203,57 @@ body {
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+/*
+ * .dark remaps semantic canvas/brand/text/border to the roadmap dark column
+ * for isolated subtrees (admin, future dark chrome). Forest tokens stay
+ * first-class so mixed-theme pages never need .dark on <html>.
+ */
 .dark {
   --canvas-bg: oklch(0.18 0.025 155);
   --canvas-surface: oklch(0.22 0.030 155);
   --canvas-elevated: oklch(0.26 0.035 155);
+  --text-primary: oklch(0.96 0.010 85);
+  --text-muted: oklch(0.70 0.025 155);
+  --border-subtle: oklch(0.30 0.030 155);
+  --border-strong: oklch(0.42 0.045 155);
   --brand-primary: oklch(0.78 0.120 155);
   --brand-accent: oklch(0.85 0.130 155);
-  --brand-forest: oklch(0.14 0.020 155);
+
+  --forest-bg: oklch(0.18 0.025 155);
+  --forest-surface: oklch(0.22 0.030 155);
+  --forest-elevated: oklch(0.26 0.035 155);
+  --forest-text: oklch(0.96 0.010 85);
+  --forest-muted: oklch(0.70 0.025 155);
+  --forest-border: oklch(0.30 0.030 155);
+  --brand-forest: var(--forest-bg);
+
+  --text-2xs: 0.6875rem;
+  --text-xs:  0.75rem;
+  --text-sm:  0.875rem;
+  --text-base: 1.000rem;
+  --text-lg:  1.125rem;
+  --text-xl:  1.333rem;
+  --text-2xl: 1.777rem;
+  --text-3xl: 2.369rem;
+  --text-4xl: 3.157rem;
+  --text-5xl: 4.209rem;
+
+  --space-1: 0.25rem;
+  --space-2: 0.50rem;
+  --space-3: 0.75rem;
+  --space-4: 1.00rem;
+  --space-6: 1.50rem;
+  --space-8: 2.00rem;
+  --space-12: 3.00rem;
+  --space-16: 4.00rem;
+  --space-24: 6.00rem;
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.500rem;
+  --radius-lg: 0.750rem;
+  --radius-xl: 1.000rem;
+  --radius-full: 9999px;
+
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);

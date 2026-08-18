@@ -78,7 +78,7 @@ export default function OrderConfirmedPage() {
   const pointsEarned = Math.floor(total);
 
   return (
-    <div className="min-h-screen bg-[#faf7f2] py-10 sm:py-16 px-4 sm:px-6 lg:px-8 text-stone-900 font-sans">
+    <div className="min-h-screen bg-canvas-bg py-10 sm:py-16 px-4 sm:px-6 lg:px-8 text-stone-900 font-sans">
       <div className="max-w-4xl mx-auto space-y-8">
         
         {/* Order Confirmation Hero Card */}
@@ -251,7 +251,7 @@ export default function OrderConfirmedPage() {
             </div>
 
             {/* Member Points Earned Celebration */}
-            <div className="bg-[#15281e] text-emerald-50 rounded-3xl p-6 shadow-sm border border-emerald-900/50 flex items-center justify-between gap-4">
+            <div className="bg-brand-primary text-emerald-50 rounded-3xl p-6 shadow-sm border border-emerald-900/50 flex items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-amber-300" />
@@ -300,7 +300,7 @@ export default function OrderConfirmedPage() {
             </div>
 
             {/* Skincare Ritual Preparation Concierge Card */}
-            <div className="bg-[#faf7f2] rounded-3xl p-6 border border-stone-200/80 space-y-3">
+            <div className="bg-canvas-bg rounded-3xl p-6 border border-stone-200/80 space-y-3">
               <div className="flex items-center gap-2 text-stone-900">
                 <Leaf className="w-4 h-4 text-emerald-700" />
                 <h4 className="font-serif text-sm font-bold">How to Prepare for Your Ritual</h4>
@@ -319,7 +319,7 @@ export default function OrderConfirmedPage() {
           <button
             type="button"
             onClick={() => window.location.href = '/'}
-            className="inline-flex items-center gap-2 px-8 py-4 bg-[#15281e] hover:bg-[#1e392b] text-white font-medium rounded-2xl transition-all shadow-md text-sm"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-brand-primary hover:bg-forest-elevated text-white font-medium rounded-2xl transition-all shadow-md text-sm"
           >
             <span>Continue Exploring Sanctuary Formulations</span>
             <ArrowRight className="w-4 h-4" />

@@ -74,7 +74,7 @@ export const CartDrawer = () => {
 
   return (
     <Sheet open={isDrawerOpen} onOpenChange={(open) => !open && closeDrawer()}>
-      <SheetContent className="w-full sm:max-w-md flex flex-col p-0 bg-[#f4eadf] border-l-stone-300">
+      <SheetContent className="w-full sm:max-w-md flex flex-col p-0 bg-canvas-bg border-l-stone-300">
         <SheetHeader className="p-6 border-b border-stone-200/50">
           <div className="flex items-center justify-between">
             <SheetTitle className="font-serif text-xl text-stone-900">

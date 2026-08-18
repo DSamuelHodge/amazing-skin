@@ -116,7 +116,7 @@ export function ReviewStep({
       {/* Destination & Courier Dispatch Snapshot */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Shipping Address Card */}
-        <div className="p-4 rounded-2xl bg-[#faf7f2] border border-stone-200/80 flex flex-col justify-between">
+        <div className="p-4 rounded-2xl bg-canvas-surface border border-stone-200/80 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
               <span className="flex items-center gap-1.5">
@@ -149,7 +149,7 @@ export function ReviewStep({
         </div>
 
         {/* Courier Dispatch Speed Card */}
-        <div className="p-4 rounded-2xl bg-[#faf7f2] border border-stone-200/80 flex flex-col justify-between">
+        <div className="p-4 rounded-2xl bg-canvas-surface border border-stone-200/80 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
               <span className="flex items-center gap-1.5">
@@ -387,7 +387,7 @@ export function ReviewStep({
         <button
           type="button"
           onClick={onContinue}
-          className="w-full sm:w-auto px-8 py-4 bg-[#15281e] hover:bg-[#1e392b] text-white font-medium rounded-2xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base group"
+          className="w-full sm:w-auto px-8 py-4 bg-brand-primary hover:bg-forest-elevated text-white font-medium rounded-2xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base group"
         >
           <span>Continue to Secure Payment</span>
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

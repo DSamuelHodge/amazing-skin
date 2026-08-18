@@ -7,7 +7,7 @@ export function StatsSection() {
   const { numbers } = mockData;
 
   return (
-    <section className="text-emerald-50 bg-[#0b0f0e] w-full border-emerald-900/60 border-t">
+    <section className="text-emerald-50 bg-forest-bg w-full border-emerald-900/60 border-t">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10 mb-10">
           <motion.div 
@@ -50,8 +50,8 @@ export function StatsSection() {
                 i === 0 
                   ? "bg-emerald-300 text-emerald-950 shadow-sm border border-emerald-500/60" 
                   : i === 1 
-                    ? "bg-[#0e1513] border border-emerald-900/70" 
-                    : "bg-[#111715] border border-emerald-900/70"
+                    ? "bg-forest-bg border border-emerald-900/70" 
+                    : "bg-forest-surface border border-emerald-900/70"
               }`}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
