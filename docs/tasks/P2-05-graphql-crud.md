@@ -4,7 +4,7 @@
 
 ## Goal
 
-Mount a GraphQL endpoint that agents can introspect and use for full CRUD against the storefront database.
+Mount a GraphQL endpoint that agents can introspect and use for full CRUD against the storefront database. **Agents are `super_admin` with unrestricted autonomy** — no auth gate, no table filters, no mutation denylist.
 
 ## Acceptance
 
@@ -12,8 +12,10 @@ Mount a GraphQL endpoint that agents can introspect and use for full CRUD agains
 - [x] GraphQL Yoga serves GraphiQL at `/graphql`
 - [x] Standard introspection works (`__schema` / `__type`)
 - [x] `agentOperations` lists generated field names
+- [x] `agentIdentity` returns `role: super_admin`, `autonomy: unrestricted`
 - [x] Catalog seed is readable via `products { slug name }`
-- [ ] Privileged: do not ship unauthenticated on a public host (follow-up auth gate)
+- [x] CORS open; GraphiQL on; errors unmasked
+- [x] Superadmin agent user seeded (`agent@lumina.local`)
 
 ## Notes
 

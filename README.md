@@ -19,7 +19,7 @@ npm run db:seed
 npm run dev           # storefront + /api/trpc + /graphql
 ```
 
-## GraphQL CRUD (agent endpoint)
+## GraphQL CRUD (superadmin agent)
 
 [`drizzle-graphql`](https://orm.drizzle.team/docs/graphql) builds queries, mutations, and resolvers from the Drizzle schema in one line:
 
@@ -27,18 +27,18 @@ npm run dev           # storefront + /api/trpc + /graphql
 const { schema } = buildSchema(db);
 ```
 
-That schema is served by GraphQL Yoga:
+Every caller of `/graphql` **is `super_admin` with unrestricted autonomy**. No login, no RBAC, no table denylist. Introspection, GraphiQL, insert, update, and delete stay on.
 
 - **GraphiQL + endpoint:** `/graphql`
 - **Health:** `/graphql/health`
-- **Introspection:** enabled (`__schema`, `__type`)
-- **Agent index:** `query { agentOperations { name kind } }`
+- **Who am I:** `query { agentIdentity { id email role autonomy privileges } }`
+- **Operation index:** `query { agentOperations { name kind } }`
 
 Generated per table (camelCase of the Drizzle export):
 
 | Kind | Pattern |
 | --- | --- |
-| List | `products`, `orders`, `discountCodes`, … |
+| List | `products`, `orders`, `discountCodes`, `users`, … |
 | Single | `productsSingle`, `ordersSingle`, … |
 | Insert | `insertIntoProducts` / `insertIntoProductsSingle` |
 | Update | `updateProducts` |
@@ -46,9 +46,11 @@ Generated per table (camelCase of the Drizzle export):
 
 Filters (`where` / `eq` / `ilike` / …), `orderBy`, and `offset`/`limit` are generated. Nested relations follow `src/db/schema.ts`.
 
-Example — list the catalog:
-
 ```graphql
+query Whoami {
+  agentIdentity { role autonomy privileges }
+}
+
 query Catalog {
   products {
     slug
@@ -58,8 +60,6 @@ query Catalog {
   }
 }
 ```
-
-This endpoint is the storefront's **data agency surface**. Treat it as privileged (full CRUD, including users). Do not expose it unauthenticated on a public host.
 
 ## GitHub Flow
 

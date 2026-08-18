@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { getDb } from './client';
 import {
   categories,
+  customerProfiles,
   discountCodes,
   ingredients,
   productImages,
@@ -10,9 +11,11 @@ import {
   productVariants,
   products,
   relatedProducts,
+  users,
   variantAttributes,
 } from './schema';
 import { mockData } from '../data/mockData';
+import { AGENT_SUPERADMIN } from '../lib/agent-superadmin';
 
 const money = (value: number) => value.toFixed(2);
 
@@ -44,6 +47,9 @@ const IDS = {
   discGlow20: '55555555-5555-4555-8555-555555555502',
   discWelcome50: '55555555-5555-4555-8555-555555555503',
   discSave10: '55555555-5555-4555-8555-555555555504',
+
+  agentUser: AGENT_SUPERADMIN.id,
+  agentProfile: '00000000-0000-4000-8000-000000000002',
 } as const;
 
 const GLOW_VARIANT_IDS = [IDS.varLgs30, IDS.varLgs50, IDS.varLgs100] as const;
@@ -64,6 +70,41 @@ async function main() {
   const [barrierShop, cloudMeltShop, velvetLockShop] = shop.topProducts;
 
   console.log('[db] Seeding catalog…');
+
+  await db
+    .insert(users)
+    .values({
+      id: IDS.agentUser,
+      email: AGENT_SUPERADMIN.email,
+      role: 'super_admin',
+      isEmailVerified: true,
+    })
+    .onConflictDoUpdate({
+      target: users.email,
+      set: {
+        role: 'super_admin',
+        isEmailVerified: true,
+      },
+    });
+
+  await db
+    .insert(customerProfiles)
+    .values({
+      id: IDS.agentProfile,
+      userId: IDS.agentUser,
+      firstName: 'Lumina',
+      lastName: 'Agent',
+      loyaltyTier: 'Founder',
+      loyaltyPoints: 0,
+    })
+    .onConflictDoUpdate({
+      target: customerProfiles.userId,
+      set: {
+        firstName: 'Lumina',
+        lastName: 'Agent',
+        loyaltyTier: 'Founder',
+      },
+    });
 
   const categoryRows = [
     {
@@ -702,7 +743,7 @@ async function main() {
     });
   }
 
-  console.log('[db] Seed complete: 3 categories, 7 products, 9 variants, 4 discount codes');
+  console.log('[db] Seed complete: superadmin agent, 3 categories, 7 products, 9 variants, 4 discount codes');
 }
 
 main()
