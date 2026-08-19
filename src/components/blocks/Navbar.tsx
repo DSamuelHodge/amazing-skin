@@ -16,10 +16,17 @@ export function Navbar() {
         <a 
           href="/"
           aria-label="Lumina Skin Rituals Home"
-          className="flex bg-center w-[100px] h-[36px] bg-cover invert gap-x-2 gap-y-2 items-center shrink-0"
-          style={{ backgroundImage: `url(${mockData.nav.logo})` }}
-        />
-        <nav className="hidden md:flex items-center gap-7 text-sm text-emerald-200">
+          className="flex items-center shrink-0 min-h-11"
+        >
+          <img
+            src={mockData.nav.logo}
+            alt="Lumina Skin Rituals"
+            width={100}
+            height={36}
+            className="w-[100px] h-[36px] object-contain invert"
+          />
+        </a>
+        <nav className="hidden md:flex items-center gap-7 text-sm text-emerald-100" aria-label="Primary">
           {mockData.nav.links.map((link) => (
             <a key={link.label} href={link.href} className="hover:text-emerald-50 transition-colors">
               {link.label}
@@ -31,8 +38,8 @@ export function Navbar() {
           
           <button 
             onClick={openDrawer}
-            className="relative p-2 text-emerald-200 hover:text-emerald-50 transition-colors rounded-full hover:bg-white/5"
-            aria-label="Open cart"
+            className="relative inline-flex items-center justify-center min-h-11 min-w-11 p-2 text-emerald-100 hover:text-emerald-50 transition-colors rounded-full hover:bg-white/5"
+            aria-label={`Open cart${itemCount ? `, ${itemCount} items` : ''}`}
           >
             <ShoppingBag className="w-5 h-5" />
             {itemCount > 0 && (

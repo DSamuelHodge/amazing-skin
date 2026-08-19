@@ -1,9 +1,4 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
-import { useState, useEffect } from 'react';
+import { lazy, Suspense, useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Navbar } from "@/src/components/blocks/Navbar";
 import { HeroSection } from "@/src/components/blocks/HeroSection";
@@ -12,18 +7,28 @@ import { StatsSection } from "@/src/components/blocks/StatsSection";
 import { ShopSection } from "@/src/components/blocks/ShopSection";
 import { CtaSection } from "@/src/components/blocks/CtaSection";
 import { Footer } from "@/src/components/blocks/Footer";
-import ProductDetailPage from "@/src/routes/product/$slug";
 import { CartDrawer } from "@/src/components/cart-drawer";
-import CheckoutPage from "@/src/routes/checkout";
-import OrderConfirmedPage from "@/src/routes/order-confirmed";
-import AccountPage from "@/src/routes/account";
-import AdminPage from "@/src/routes/admin";
 import { AuthModal } from "@/src/components/auth/AuthModal";
 import { Toaster } from "sonner";
 import { useAuthStore } from "@/src/lib/authStore";
 import { navigate } from "@/src/lib/nav";
 
+const CheckoutPage = lazy(() => import("@/src/routes/checkout"));
+const OrderConfirmedPage = lazy(() => import("@/src/routes/order-confirmed"));
+const AccountPage = lazy(() => import("@/src/routes/account"));
+const AdminPage = lazy(() => import("@/src/routes/admin"));
+const ProductDetailPage = lazy(() => import("@/src/routes/product/$slug"));
+
 const queryClient = new QueryClient();
+
+function RouteFallback() {
+  return (
+    <div className="min-h-[50vh] flex items-center justify-center" role="status" aria-live="polite">
+      <span className="sr-only">Loading page</span>
+      <div className="w-10 h-10 border-2 border-emerald-800 border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+}
 
 export default function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
@@ -71,27 +76,35 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen flex flex-col w-full overflow-x-hidden">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-[100] focus:rounded-xl focus:bg-canvas-surface focus:px-4 focus:py-3 focus:text-sm focus:font-medium focus:text-stone-900 focus:shadow-lg"
+        >
+          Skip to content
+        </a>
         {!isAdminPage && <Navbar />}
-        <main className="flex-1 w-full">
-          {isAdminPage ? (
-            <AdminPage />
-          ) : isProductPage ? (
-            <ProductDetailPage key={currentPath} />
-          ) : isCheckoutPage ? (
-            <CheckoutPage />
-          ) : isOrderConfirmedPage ? (
-            <OrderConfirmedPage />
-          ) : isAccountPage ? (
-            <AccountPage />
-          ) : (
-            <>
-              <HeroSection />
-              <EveningRitualSection />
-              <StatsSection />
-              <ShopSection />
-              <CtaSection />
-            </>
-          )}
+        <main id="main-content" className="flex-1 w-full" tabIndex={-1}>
+          <Suspense fallback={<RouteFallback />}>
+            {isAdminPage ? (
+              <AdminPage />
+            ) : isProductPage ? (
+              <ProductDetailPage key={currentPath} />
+            ) : isCheckoutPage ? (
+              <CheckoutPage />
+            ) : isOrderConfirmedPage ? (
+              <OrderConfirmedPage />
+            ) : isAccountPage ? (
+              <AccountPage />
+            ) : (
+              <>
+                <HeroSection />
+                <EveningRitualSection />
+                <StatsSection />
+                <ShopSection />
+                <CtaSection />
+              </>
+            )}
+          </Suspense>
         </main>
         {!isAdminPage && <Footer />}
         {!isAdminPage && <CartDrawer />}
