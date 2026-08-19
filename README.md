@@ -101,3 +101,46 @@ To publish the local backlog as GitHub issues (needs `issues:write`):
 | `npm run db:migrate` | Apply `drizzle/` SQL |
 | `npm run db:seed` | Idempotent catalog seed |
 | `npm run test:e2e` | Guest checkout + inventory lock (needs a running `npm run dev`) |
+
+## Environment
+
+Never commit secrets. Copy `.env.example` → `.env`.
+
+| Variable | Required | Notes |
+| --- | --- | --- |
+| `DATABASE_URL` | prod | Postgres. Unset locally → embedded PGLite in `data/pglite` |
+| `BETTER_AUTH_SECRET` | yes | Session signing |
+| `BETTER_AUTH_API_KEY` | infra | Better Auth dash/sentinel |
+| `BETTER_AUTH_URL` | prod | `https://thenikkigcollection.com` after DNS leaves Wix |
+| `BETTER_AUTH_USE_PRODUCTION_URL` | prod | Set `true` only after the domain points at this app |
+| `STRIPE_SECRET_KEY` | payments | **`sk_test_` only** — `sk_live_` is refused |
+| `STRIPE_PUBLISHABLE_KEY` | payments | Matching `pk_test_` |
+| `STRIPE_WEBHOOK_SECRET` | webhooks | Stripe CLI / Dashboard signing secret |
+| `RESEND_API_KEY` | email | Unset = log and skip; capture still succeeds |
+| `EMAIL_FROM` | email | Default `Lumina Skin Rituals <orders@thenikkigcollection.com>` |
+| `APP_URL` | preview/prod | Public origin for auth cookies and return URLs |
+
+## Stripe webhook
+
+Dashboard (test mode) endpoint:
+
+```
+https://<your-host>/api/webhooks/stripe
+```
+
+Events: `payment_intent.succeeded`, `payment_intent.payment_failed`, `payment_intent.canceled`.
+Raw body is required — do not JSON-parse this route. Locally: `stripe listen --forward-to localhost:8080/api/webhooks/stripe`.
+
+## Deploy
+
+Production artifact is `npm run build` (`dist/`). Pair with:
+
+1. Postgres `DATABASE_URL`
+2. `npm run db:migrate` then `npm run db:seed` on first release
+3. Env vars from the table above (no live Stripe keys)
+4. Host that serves the Vite build **and** the `/api/*` + `/graphql` Node middleware (Vite preview, Cloud Run with a Node server, or Vercel with a server entry)
+
+Vercel: set Root Directory to this repo, Node 22, the env vars, and point the Stripe webhook at `https://<project>.vercel.app/api/webhooks/stripe`. Cloud Run: containerize `npm run build && npm run preview` (or a custom Node host) bound to `$PORT`.
+
+Until `thenikkigcollection.com` DNS leaves Wix, keep `BETTER_AUTH_USE_PRODUCTION_URL` unset so preview auth stays on `APP_URL`.
+
