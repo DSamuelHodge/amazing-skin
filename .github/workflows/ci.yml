@@ -52,3 +52,4 @@ jobs:
         run: |
           npm install --no-save --legacy-peer-deps playwright@1.55.0
           npm run test:e2e
+          npm run test:a11y

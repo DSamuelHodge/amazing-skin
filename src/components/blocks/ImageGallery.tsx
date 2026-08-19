@@ -16,6 +16,10 @@ export const ImageGallery = ({ displayImages, selectedImageIndex, setSelectedIma
         <img 
           src={displayImages[selectedImageIndex]?.imageUrl} 
           alt={displayImages[selectedImageIndex]?.altText || productName}
+          width={1200}
+          height={1500}
+          fetchPriority="high"
+          decoding="async"
           className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-[1.8] origin-center cursor-zoom-in"
           referrerPolicy="no-referrer"
         />
@@ -31,7 +35,7 @@ export const ImageGallery = ({ displayImages, selectedImageIndex, setSelectedIma
               key={img.id}
               onClick={() => setSelectedImageIndex(idx)}
               className={cn(
-                "relative w-[72px] h-[72px] rounded-md overflow-hidden flex-shrink-0 border-2 transition-all",
+                "relative w-[72px] h-[72px] min-w-11 min-h-11 rounded-md overflow-hidden flex-shrink-0 border-2 transition-all",
                 selectedImageIndex === idx ? "border-primary" : "border-transparent hover:border-primary/50"
               )}
             >
