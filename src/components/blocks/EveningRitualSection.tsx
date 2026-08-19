@@ -106,7 +106,7 @@ export function EveningRitualSection() {
           <div className="w-full lg:w-1/2">
             <div className="relative overflow-hidden rounded-3xl border border-stone-200 bg-canvas-surface">
               <div className="absolute inset-0 bg-gradient-to-tr from-stone-900/5 via-transparent to-amber-200/40 pointer-events-none"></div>
-              <img src={eveningRitual.highlight.image} alt="Soft evening self-care moment" className="sm:h-72 lg:h-80 w-full h-64 object-cover" />
+              <img src={eveningRitual.highlight.image} alt="Soft evening self-care moment" width={1600} height={900} loading="lazy" decoding="async" className="sm:h-72 lg:h-80 w-full h-64 object-cover aspect-[16/10]" />
             </div>
           </div>
           <div className="w-full lg:w-1/2">

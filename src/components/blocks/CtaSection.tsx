@@ -111,7 +111,7 @@ export function CtaSection() {
                           key={i} 
                           className="w-7 h-7 rounded-full border border-forest-bg object-cover" 
                           src={avatar} 
-                          alt="Customer" 
+                          alt={`Customer ${i + 1}`} 
                         />
                       ))}
                     </div>
