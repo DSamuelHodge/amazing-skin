@@ -22,7 +22,7 @@ export function HeroSection() {
           <h2 className="leading-tight sm:text-4xl lg:text-8xl text-3xl font-medium italic text-emerald-300 tracking-tight font-playfair mt-2">
             {hero.titleLine2}
           </h2>
-          <p className="mt-4 max-w-xl text-sm sm:text-base text-emerald-100">
+          <p className="mt-4 max-w-xl text-sm sm:text-base text-emerald-50">
             {hero.description}
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-4">
@@ -59,7 +59,11 @@ export function HeroSection() {
                   key={i} 
                   className="w-7 h-7 object-cover border-forest-bg border rounded-full" 
                   src={avatar} 
-                  alt={`Customer ${i + 1}`} 
+                  alt="" 
+                  width={28}
+                  height={28}
+                  loading="lazy"
+                  decoding="async"
                 />
               ))}
             </div>
@@ -76,8 +80,12 @@ export function HeroSection() {
         >
           <img 
             src={hero.mainImage} 
-            alt="Close-up portrait" 
-            className="w-full h-[680px] object-cover" 
+            alt="Close-up of calm, hydrated skin after the Lumina ritual" 
+            width={1600}
+            height={2000}
+            fetchPriority="high"
+            decoding="async"
+            className="w-full h-[680px] object-cover aspect-[4/5]" 
           />
           <div className="absolute bottom-5 left-5 sm:bottom-6 sm:left-6">
             <div className="bg-forest-elevated/95 backdrop-blur-sm rounded-2xl px-4 py-3 sm:px-5 sm:py-4 shadow-md max-w-xs border border-emerald-900/70">
@@ -130,7 +138,7 @@ export function HeroSection() {
             <div className="flex-1 flex items-center justify-center">
               <div className="relative w-28 sm:w-32 lg:w-36">
                 <div className="absolute -top-3 -left-2 w-10 h-10 rounded-full bg-emerald-500/40 blur-2xl"></div>
-                <img src={hero.features[0].image} alt="Serum bottle" className="w-full h-auto object-contain rounded-2xl relative drop-shadow-xl" />
+                <img src={hero.features[0].image} alt="Refillable Lumina serum bottle" width={320} height={400} loading="lazy" decoding="async" className="w-full h-auto object-contain rounded-2xl relative drop-shadow-xl" />
               </div>
             </div>
           </motion.article>
@@ -169,7 +177,7 @@ export function HeroSection() {
             <div className="flex-1 flex items-center justify-center">
               <div className="relative w-full max-w-xs">
                 <div className="absolute -right-6 -bottom-10 w-32 h-32 rounded-full bg-emerald-700/40 blur-3xl"></div>
-                <img src={hero.features[1].image} alt="Botanical leaf" className="w-full h-full object-cover rounded-2xl relative" />
+                <img src={hero.features[1].image} alt="Botanical leaf used in Lumina formulations" width={800} height={800} loading="lazy" decoding="async" className="w-full h-full object-cover rounded-2xl relative aspect-square" />
               </div>
             </div>
           </motion.article>

@@ -3,7 +3,7 @@ import { cn } from "@/src/lib/utils";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "outline" | "ghost" | "light" | "lightOutline" | "dark";
-  size?: "sm" | "md" | "lg" | "icon";
+  size?: "sm" | "md" | "lg" | "icon" | "icon-sm";
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -20,11 +20,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       dark: "border border-emerald-700/80 bg-forest-surface text-emerald-100 hover:border-emerald-400 hover:bg-forest-bg",
     };
 
-    const sizes = {
-      sm: "h-8 px-3.5 text-xs",
-      md: "h-10 px-4 py-2 text-sm",
-      lg: "h-11 px-5 py-2.5 text-sm",
-      icon: "h-10 w-10",
+    const sizes: Record<NonNullable<ButtonProps['size']>, string> = {
+      sm: "h-11 min-h-11 min-w-11 px-3.5 text-xs",
+      md: "h-11 min-h-11 px-4 py-2 text-sm",
+      lg: "h-12 min-h-12 px-5 py-2.5 text-sm",
+      icon: "h-11 w-11 min-h-11 min-w-11",
+      "icon-sm": "h-11 w-11 min-h-11 min-w-11",
     };
 
     return (

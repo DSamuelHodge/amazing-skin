@@ -146,7 +146,7 @@ export function ShopSection() {
               <button 
                 type="button"
                 onClick={() => navigate('#shop-section')}
-                className="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-stone-700 hover:text-stone-900 transition-colors"
+                className="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-stone-700 hover:text-stone-900 transition-colors min-h-11 px-2"
                 aria-label="View all new arrivals"
               >
                 View all new
@@ -167,7 +167,7 @@ export function ShopSection() {
                   <div className="relative">
                     <div className="absolute inset-0 bg-gradient-to-t from-stone-900/20 via-transparent to-transparent pointer-events-none"></div>
                     <a href={`/product/${product.slug}`}>
-                      <img src={product.image} alt={product.name} className="sm:h-56 w-full h-48 object-cover" />
+                      <img src={product.image} alt={product.name} width={640} height={800} loading="lazy" decoding="async" className="sm:h-56 w-full h-48 object-cover aspect-[5/4]" />
                     </a>
                     <div className="absolute top-3 left-3">
                       <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[0.68rem] font-medium bg-stone-900 text-forest-text shadow-sm">
@@ -203,6 +203,7 @@ export function ShopSection() {
                         size="sm"
                         onClick={(event) => handleAdd(product, event)}
                         disabled={addItem.isPending}
+                        aria-label={`Add ${product.name} to bag`}
                       >
                         Add
                         <Plus className="w-3.5 h-3.5" />
@@ -227,7 +228,7 @@ export function ShopSection() {
               <button 
                 type="button"
                 onClick={() => navigate('#shop-section')}
-                className="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-stone-700 hover:text-stone-900 transition-colors"
+                className="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-stone-700 hover:text-stone-900 transition-colors min-h-11 px-2"
                 aria-label="View all top rated products"
               >
                 View all top rated
@@ -246,7 +247,7 @@ export function ShopSection() {
                   transition={{ duration: 0.5, delay: i * 0.1 }}
                 >
                   <a href={`/product/${product.slug}`} className="relative mb-4 rounded-2xl overflow-hidden block">
-                    <img src={product.image} alt={product.name} className="sm:h-40 w-full h-32 object-cover" />
+                    <img src={product.image} alt={product.name} width={640} height={512} loading="lazy" decoding="async" className="sm:h-40 w-full h-32 object-cover aspect-[5/4]" />
                   </a>
                   <div className="flex items-start justify-between gap-3">
                     <div>

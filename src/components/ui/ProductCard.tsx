@@ -8,6 +8,10 @@ export const ProductCard = ({ product }: { product: RelatedProduct['product'] })
         <img 
           src={product.images[0]?.imageUrl} 
           alt={product.images[0]?.altText || product.name}
+          width={480}
+          height={600}
+          loading="lazy"
+          decoding="async"
           className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
           referrerPolicy="no-referrer"
         />

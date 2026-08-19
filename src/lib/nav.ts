@@ -16,7 +16,9 @@ export function shopVariantId(title: string) {
 export function navigate(path: string) {
   if (!path || path === '#') return;
   if (path.startsWith('#')) {
-    document.querySelector(path)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const target = document.querySelector<HTMLElement>(path);
+    target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    target?.focus({ preventScroll: true });
     return;
   }
   const url = new URL(path, window.location.origin);
@@ -25,14 +27,18 @@ export function navigate(path: string) {
     return;
   }
   if (url.pathname === window.location.pathname && url.hash) {
-    document.querySelector(url.hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const target = document.querySelector<HTMLElement>(url.hash);
+    target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    target?.focus({ preventScroll: true });
     return;
   }
   window.history.pushState({}, '', url.pathname + url.search + url.hash);
   window.dispatchEvent(new PopStateEvent('popstate'));
   if (url.hash) {
     requestAnimationFrame(() => {
-      document.querySelector(url.hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const target = document.querySelector<HTMLElement>(url.hash);
+      target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      target?.focus({ preventScroll: true });
     });
   } else {
     window.scrollTo({ top: 0, behavior: 'instant' });

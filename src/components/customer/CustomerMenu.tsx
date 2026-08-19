@@ -35,13 +35,13 @@ export function CustomerMenu() {
       <div className="flex items-center gap-2">
         <button
           onClick={() => openAuthModal('signin')}
-          className="text-xs sm:text-sm font-medium text-emerald-200 hover:text-emerald-50 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors"
+          className="text-xs sm:text-sm font-medium text-emerald-100 hover:text-emerald-50 min-h-11 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors"
         >
           Sign In
         </button>
         <button
           onClick={() => openAuthModal('signup')}
-          className="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium bg-emerald-800/80 hover:bg-emerald-700 text-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-600/40 transition-colors shadow-xs"
+          className="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium bg-emerald-800/80 hover:bg-emerald-700 text-emerald-50 min-h-11 px-3 py-2 rounded-xl border border-emerald-600/40 transition-colors shadow-xs"
         >
           <Sparkle className="w-3 h-3 text-emerald-300" />
           Join Rituals
@@ -57,8 +57,10 @@ export function CustomerMenu() {
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2.5 p-1.5 pr-3 rounded-full bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700/50 text-emerald-50 transition-all shadow-xs"
+        className="flex items-center gap-2.5 min-h-11 p-1.5 pr-3 rounded-full bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700/50 text-emerald-50 transition-all shadow-xs"
         aria-label="User profile menu"
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
       >
         <div className="w-7 h-7 rounded-full bg-emerald-600 border border-emerald-400/50 flex items-center justify-center text-xs font-bold text-white overflow-hidden">
           {user.avatarUrl ? (

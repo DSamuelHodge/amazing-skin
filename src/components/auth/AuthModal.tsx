@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   X, 
@@ -48,6 +48,52 @@ export function AuthModal() {
   const [skinType, setSkinType] = useState('Sensitive');
   const [adminRole, setAdminRole] = useState<UserRole>('admin');
   const [magicLinkSent, setMagicLinkSent] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previouslyFocused = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!isAuthModalOpen) return;
+    previouslyFocused.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const id = window.setTimeout(() => {
+      const first = dialogRef.current?.querySelector<HTMLElement>(
+        'input[type="email"], input:not([type="hidden"]), button:not([disabled])',
+      );
+      first?.focus();
+    }, 30);
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeAuthModal();
+        return;
+      }
+      if (event.key !== 'Tab' || !dialogRef.current) return;
+      const nodes = [
+        ...dialogRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ].filter((el) => !el.hasAttribute('disabled') && el.offsetParent !== null);
+      if (nodes.length === 0) return;
+      const first = nodes[0];
+      const last = nodes[nodes.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.clearTimeout(id);
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = prevOverflow;
+      previouslyFocused.current?.focus();
+    };
+  }, [isAuthModalOpen, closeAuthModal]);
 
   if (!isAuthModalOpen) return null;
 
@@ -160,10 +206,15 @@ export function AuthModal() {
         exit={{ opacity: 0 }}
         onClick={closeAuthModal}
         className="fixed inset-0 bg-forest-bg/80 backdrop-blur-md transition-opacity"
+        aria-hidden="true"
       />
 
       {/* Modal Container */}
       <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="auth-dialog-title"
         initial={{ opacity: 0, scale: 0.96, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96, y: 12 }}
@@ -174,8 +225,8 @@ export function AuthModal() {
         <div className="bg-brand-primary text-emerald-50 px-6 pt-6 pb-5 relative">
           <button
             onClick={closeAuthModal}
-            className="absolute top-5 right-5 p-2 rounded-full text-emerald-200/80 hover:text-white hover:bg-white/10 transition-colors"
-            aria-label="Close modal"
+            className="absolute top-4 right-4 inline-flex items-center justify-center min-h-11 min-w-11 rounded-full text-emerald-100 hover:text-white hover:bg-white/10 transition-colors"
+            aria-label="Close sign in"
           >
             <X className="w-5 h-5" />
           </button>
@@ -187,7 +238,7 @@ export function AuthModal() {
             </span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl font-serif text-white tracking-tight">
+          <h2 id="auth-dialog-title" className="text-2xl sm:text-3xl font-serif text-white tracking-tight">
             {activePortal === 'admin' ? 'Staff Operations Console' : 'Your Personal Skin Sanctuary'}
           </h2>
           <p className="text-sm text-emerald-200/90 mt-1 max-w-sm">
@@ -201,10 +252,10 @@ export function AuthModal() {
             <button
               type="button"
               onClick={() => setActivePortal('customer')}
-              className={`flex-1 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all flex items-center justify-center gap-2 ${
+              className={`flex-1 min-h-11 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all flex items-center justify-center gap-2 ${
                 activePortal === 'customer'
                   ? 'bg-emerald-800 text-white shadow-sm'
-                  : 'text-emerald-300/70 hover:text-emerald-100'
+                  : 'text-emerald-100 hover:text-emerald-50'
               }`}
             >
               <Sparkles className="w-4 h-4 text-emerald-400" />
@@ -213,10 +264,10 @@ export function AuthModal() {
             <button
               type="button"
               onClick={() => setActivePortal('admin')}
-              className={`flex-1 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all flex items-center justify-center gap-2 ${
+              className={`flex-1 min-h-11 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all flex items-center justify-center gap-2 ${
                 activePortal === 'admin'
                   ? 'bg-emerald-800 text-white shadow-sm'
-                  : 'text-emerald-300/70 hover:text-emerald-100'
+                  : 'text-emerald-100 hover:text-emerald-50'
               }`}
             >
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
@@ -302,22 +353,24 @@ export function AuthModal() {
                         type="button"
                         onClick={handleQuickDemoCustomer}
                         disabled={isLoading}
-                        className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-medium rounded-xl transition-colors shrink-0 shadow-sm"
+                        className="px-3 py-2 min-h-11 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-medium rounded-xl transition-colors shrink-0 shadow-sm"
                       >
                         Sign in as Clara
                       </button>
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-stone-700 tracking-wide uppercase">Email Address</label>
+                      <label htmlFor="auth-email" className="text-xs font-semibold text-stone-700 tracking-wide uppercase">Email Address</label>
                       <div className="relative">
                         <Mail className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                         <input
+                          id="auth-email"
                           type="email"
+                          autoComplete="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="clara.vance@example.com"
-                          className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-stone-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all"
+                          className="w-full min-h-11 pl-10 pr-4 py-2.5 rounded-xl border border-stone-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700/20 focus:border-emerald-700 transition-all"
                           required
                         />
                       </div>
@@ -348,7 +401,8 @@ export function AuthModal() {
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700"
+                          className="absolute right-2 top-1/2 -translate-y-1/2 text-stone-600 hover:text-stone-800 min-h-11 min-w-11 inline-flex items-center justify-center"
+                          aria-label={showPassword ? 'Hide password' : 'Show password'}
                         >
                           {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
